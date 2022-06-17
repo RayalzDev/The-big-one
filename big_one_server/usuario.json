@@ -3,8 +3,7 @@
     "contraseña":"ninguna",
     "foto": "url",
     "cartera":5,
-    "favoritos":"",
-    "acciones":"",
-    "activo":"true",
+    "favoritos":[], 
+    "acciones":[],
     "rol":"admin"
 }

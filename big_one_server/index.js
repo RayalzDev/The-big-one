@@ -53,10 +53,9 @@ app.post("/usuario", async function (request, response) {
 
 app.put("/usuario", async function (request, response) {
   let database = db.db("big_one_server");
-  await database.collection("usuarios").updateOne(
-    { _id: ObjectId(request.body._id) }, //Aqui solo pasar datos que se van a modificar
-    { $set: request.body }
-  );
+  await database
+    .collection("usuarios")
+    .updateOne({ _id: ObjectId(request.body._id) }, { $set: request.body });
   response.json("usuario modificado");
 });
 
@@ -90,31 +89,41 @@ app.get("/empresas", async function (request, response) {
 
 //Obtener una empresa
 
-app.get("/empresas/:name", async function (request, response) {
+app.get("/empresas/", async function (request, response) {
   let database = db.db("big_one_server");
 
   await database
     .collection("empresas")
-    .findOne( {name: {$eq: request.params.name}}, (err, results) => {
+    .findOne({ name: { $eq: request.body.name } }, (err, results) => {
       if (!results) {
         response.status(404).send("Empresa no encontrada");
       }
 
       response.status(200).send(results);
-    })
+    });
 });
 
 //Borrar una empresa
 
-app.delete("/empresas/:_id", async function (request, response) {
+app.delete("/empresas", async function (request, response) {
   let database = db.db("big_one_server");
 
   await database
     .collection("empresas")
-    .deleteOne( { _id: ObjectId(request.body._id) }, (err, results) => {
+    .deleteOne({ _id: ObjectId(request.body._id) }, (err, results) => {
       if (!results) {
         response.status(404).send("Empresa no encontrada");
       }
       response.status(200).send("Empresa borrada");
-    })
+    });
+});
+
+//Editar una empresa
+
+app.put("/empresas", async function (request, response) {
+  let database = db.db("big_one_server");
+
+  await database
+    .collection("empresas")
+    .updateOne({ _id: ObjectId(request.body._id) }, { $set: request.body });
 });
