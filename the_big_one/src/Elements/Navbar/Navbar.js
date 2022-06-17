@@ -1,7 +1,10 @@
+
 export default function Navbar() {
-    return (
-        <>
-        Navbar
-        </>
-    )
+ 
+
+  return (
+  
+  <>
+  </>
+  );
 }

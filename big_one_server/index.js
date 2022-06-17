@@ -42,7 +42,7 @@ app.post("/usuario", async function (request, response) {
         //Comprobar que recibe respuesta, si no salta error
         response
           .status(500)
-          .send("Error inesperado, se ha podido crear usuario");
+          .send("Error inesperado, no se ha podido crear usuario");
       } else {
         response.status(200).send("usuario registrado");
       }
