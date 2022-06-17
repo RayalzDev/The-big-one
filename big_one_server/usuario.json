@@ -1,0 +1,10 @@
+{
+    "nombre":"Raul",
+    "contraseña":"ninguna",
+    "foto": "url",
+    "cartera":5,
+    "favoritos":"",
+    "acciones":"",
+    "activo":"true",
+    "rol":"admin"
+}
