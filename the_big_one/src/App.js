@@ -4,7 +4,7 @@ import Login from "./views/Login";
 import Perfil from "./views/Perfil";
 import Registro from "./views/Registro";
 import { HOME, LOGIN, REGISTRO, PERFIL, AUX } from "./Routes/paths";
-import Navbar from "./Components/Navbar"
+
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Route path={LOGIN} element={<Login />} />
         <Route path={REGISTRO} element={<Registro />} />
         <Route path={PERFIL} element={<Perfil />} />
-        <Route path={AUX} element={<Home />} />
+        <Route path={AUX} element={<Home/>} />
       </Routes>
     </BrowserRouter>
   );

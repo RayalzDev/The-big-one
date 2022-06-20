@@ -1,7 +1,10 @@
 const { ObjectId } = require("mongodb");
 const express = require("express");
+const md5 = require("nodejs-md5");
 const { response } = express();
 const app = express();
+const cors = require("cors");
+app.use(cors());
 app.use(express.json());
 let db = null;
 let MongoClient = require("mongodb").MongoClient;
@@ -35,6 +38,16 @@ app.get("/usuario", async function (request, response) {
 
 app.post("/usuario", async function (request, response) {
   let database = db.db("big_one_server");
+
+  md5.string.quiet(request.body.contraseña, function(err, md5){
+    if (err) {
+        console.log(err);
+    }
+    else {
+        request.body.contraseña = md5; 
+    }
+})
+
   await database
     .collection("usuarios")
     .insertOne(request.body, function (err, res) {
@@ -67,6 +80,33 @@ app.delete("/usuario", async function (request, response) {
     .collection("usuarios")
     .deleteOne({ _id: ObjectId(request.body._id) });
   response.json("usuario borrado");
+});
+
+//Login usuario
+app.post("/login", async function (request, response){
+
+  let database = db.db("big_one_server");
+
+  md5.string.quiet(request.body.contraseña, async function(err, md5){
+      if (err) {
+          console.log(err);
+      }
+      else {
+          request.body.contraseña = md5; 
+          await database.collection("usuarios").findOne({ nombre: { $eq: request.body.nombre } }, function(err,result){
+              if(!result){
+                  response.status(404).send("Usuario no existe");
+              } else {
+                  if(request.body.contraseña === result.contraseña){
+                      response.status(200).send("Usuario verificado");
+                      response.status(200).send(result)
+                  } else {
+                      response.status(401).send("Contraseña no valida.")
+                  }
+              }
+          }) 
+      }
+  })
 });
 
 //----------Endpoints de Empresas--------------//
