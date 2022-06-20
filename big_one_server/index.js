@@ -95,13 +95,12 @@ app.post("/login", async function (request, response){
           request.body.contraseña = md5; 
           await database.collection("usuarios").findOne({ nombre: { $eq: request.body.nombre } }, function(err,result){
               if(!result){
-                  response.status(404).send("Usuario no existe");
+                  response.send("Usuario no existe");
               } else {
                   if(request.body.contraseña === result.contraseña){
-                      response.status(200).send("Usuario verificado");
-                      response.status(200).send(result)
+                      response.send(result)
                   } else {
-                      response.status(401).send("Contraseña no valida.")
+                      response.send("Contraseña no valida.")
                   }
               }
           }) 

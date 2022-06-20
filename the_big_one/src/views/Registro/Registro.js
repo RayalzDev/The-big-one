@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
-import { LOGIN } from "../../Routes/paths";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { LOGIN, HOME } from "../../Routes/paths";
 import { useState } from "react";
 import { USUARIO } from "../../config/settings";
 
