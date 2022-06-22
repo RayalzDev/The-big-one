@@ -1,30 +1,36 @@
 import { Link } from "react-router-dom";
-import { LOGIN, PERFIL, REGISTRO } from "../../Routes/paths";
-import {useState} from "react";
+import { LOGIN, REGISTRO } from "../../Routes/paths";
+import  useFetch  from "../../hooks/useFetch";
+import { useState, useEffect } from "react";
+import {USUARIO} from "../../config/settings"
 
 export default function Home() {
-  const [nuevoUsuario, setNuevoUsuario] = useState({
-    nombre:"",
-    contraseña:"",
-    foto: "",
-    cartera:5,
-    favoritos:"",
-    acciones:"",
-    activo:true,
-    rol:"usuario"
-  });
+  const [usuario, setUsuario] = useState(null);
+  const usuarios = useFetch(USUARIO);
+
+  useEffect(
+    function () {
+      setUsuario(usuarios);
+    },
+    [usuarios]
+  );
   return (
     <div>
       <h1>Home</h1>
-    
-
 
       <ul>
         <li>
           <Link to={LOGIN}>Login</Link>
         </li>
         <li>
-          <Link to={PERFIL}>Perfil</Link>
+        {usuario &&
+        usuario.map((usuario) => (
+          <div key={usuario._id}>
+            <Link to={`/profile/${usuario._id}`}>
+              <p>{usuario.nombre}</p>
+            </Link>
+          </div>
+        ))}
         </li>
         <li>
           <Link to={REGISTRO}>Registro</Link>
