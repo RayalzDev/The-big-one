@@ -26,7 +26,7 @@ export default function Home() {
         {usuario &&
         usuario.map((usuario) => (
           <div key={usuario._id}>
-            <Link to={`/profile/${usuario._id}`}>
+            <Link to={`/perfil/${usuario._id}`}>
               <p>{usuario.nombre}</p>
             </Link>
           </div>

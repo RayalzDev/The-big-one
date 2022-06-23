@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { HOME, REGISTRO } from "../../Routes/paths";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LOGIN } from "../../config/settings";
 
 export default function Login() {
