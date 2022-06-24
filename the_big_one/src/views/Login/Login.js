@@ -2,13 +2,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { HOME, REGISTRO } from "../../Routes/paths";
 import { useState } from "react";
 import { LOGIN } from "../../config/settings";
+import { useLogeadoContext } from "../../Contexts/logeadoContext";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { setInfo } = useLogeadoContext();
 
   const [usuario, setUsuario] = useState({
     nombre: "",
-    contrasena: "",
+    contraseña: "",
   });
 
   function handleInputs(event) {
@@ -27,10 +29,12 @@ export default function Login() {
       body: JSON.stringify(usuario),
     };
     const respuesta = await fetch(LOGIN, requestUsuario);
-    console.log(respuesta)
+    const data = await respuesta.json();
+    console.log(data);
     if (respuesta.status === 200) {
       navigate(HOME);
     }
+    setInfo(data);
   }
 
   return (

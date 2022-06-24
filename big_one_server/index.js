@@ -4,7 +4,7 @@ const md5 = require("nodejs-md5");
 const { response } = express();
 const app = express();
 const cors = require("cors");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 app.use(cors());
 app.use(express.json());
 let db = null;
@@ -35,19 +35,25 @@ app.get("/usuario", async function (request, response) {
     });
 });
 
+//Obtener un usuario
+
+app.get("/usuario/:id", async function (request, response) {
+  let database = db.db("big_one_server");
+  await database.collection("usuarios").findOne({ id: request.params.id });
+});
+
 //Crear usuario
 
 app.post("/usuario", async function (request, response) {
   let database = db.db("big_one_server");
 
-  md5.string.quiet(request.body.contraseña, function(err, md5){
+  md5.string.quiet(request.body.contraseña, function (err, md5) {
     if (err) {
-        console.log(err);
+      console.log(err);
+    } else {
+      request.body.contraseña = md5;
     }
-    else {
-        request.body.contraseña = md5; 
-    }
-})
+  });
 
   await database
     .collection("usuarios")
@@ -84,29 +90,32 @@ app.delete("/usuario", async function (request, response) {
 });
 
 //Login usuario
-app.post("/login", async function (request, response){
-
+app.post("/login", async function (request, response) {
   let database = db.db("big_one_server");
 
-  md5.string.quiet(request.body.contraseña, async function(err, md5){
-      if (err) {
-          console.log(err);
-      }
-      else {
-          request.body.contraseña = md5; 
-          await database.collection("usuarios").findOne({ nombre: { $eq: request.body.nombre } }, function(err,result){
-              if(!result){
-                  response.send("Usuario no existe");
+  md5.string.quiet(request.body.contraseña, async function (err, md5) {
+    if (err) {
+      console.log(err);
+    } else {
+      request.body.contraseña = md5;
+      await database
+        .collection("usuarios")
+        .findOne(
+          { nombre: { $eq: request.body.nombre } },
+          function (err, result) {
+            if (!result) {
+              response.send("Usuario no existe");
+            } else {
+              if (request.body.contraseña === result.contraseña) {
+                response.send(result);
               } else {
-                  if(request.body.contraseña === result.contraseña){
-                      response.send(result)
-                  } else {
-                      response.send("Contraseña no valida.")
-                  }
+                response.send("Contraseña no valida.");
               }
-          }) 
-      }
-  })
+            }
+          }
+        );
+    }
+  });
 });
 
 //----------Endpoints de Empresas--------------//
