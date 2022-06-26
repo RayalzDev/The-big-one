@@ -26,7 +26,7 @@ app.get("/usuario", async function (request, response) {
   let database = db.db("big_one_server");
   await database
     .collection("usuarios")
-    .find()
+    .find({ _id: { $eq: request.body.id } })
     .toArray((err, results) => {
       if (!results) {
         response.status(404).send("El usuario no existe");
@@ -37,11 +37,18 @@ app.get("/usuario", async function (request, response) {
 
 //Obtener un usuario
 
-app.get("/usuario/:id", async function (request, response) {
+app.get("/unusuario/", async function (request, response) {
   let database = db.db("big_one_server");
-  await database.collection("usuarios").findOne({ id: request.params.id });
-});
+  await database
+  .collection("usuarios")
+  .findOne({ _id: { $eq: request.body.id } }, (err, results) => {
+    if (!results) {
+      response.status(404).send("Usuario no encontrado");
+    }
 
+    response.status(200).send(results);
+  });
+});
 //Crear usuario
 
 app.post("/usuario", async function (request, response) {

@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { HOME, REGISTRO } from "../../Routes/paths";
 import { useState } from "react";
 import { LOGIN } from "../../config/settings";
-import { useLogeadoContext } from "../../Contexts/logeadoContext";
+import { useLogeadoContext } from "../../Contexts/LogeadoContext";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -30,7 +30,11 @@ export default function Login() {
     };
     const respuesta = await fetch(LOGIN, requestUsuario);
     const data = await respuesta.json();
+
     console.log(data);
+
+    localStorage.setItem("usuario", JSON.stringify(data));
+    
     if (respuesta.status === 200) {
       navigate(HOME);
     }

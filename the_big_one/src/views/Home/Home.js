@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
-import { LOGIN, REGISTRO } from "../../Routes/paths";
-import  useFetch  from "../../hooks/useFetch";
+import { LOGIN, REGISTRO, PERFIL } from "../../Routes/paths";
+import useFetch from "../../hooks/useFetch";
 import { useState, useEffect } from "react";
-import {USUARIO} from "../../config/settings"
+import { EMPRESAS, USUARIO } from "../../config/settings";
+import Navbar from "../../Components/Navbar";
 
 export default function Home() {
   const [usuario, setUsuario] = useState(null);
   const usuarios = useFetch(USUARIO);
+  const empresas = useFetch(EMPRESAS);
 
   useEffect(
     function () {
@@ -14,23 +16,33 @@ export default function Home() {
     },
     [usuarios]
   );
+
+  console.log(usuarios)
+  console.log(empresas)
   return (
     <div>
       <h1>Home</h1>
-
+      {empresas &&
+            empresas.map((empresa) => (
+              <div key={empresa._id}>
+                
+                  <p>{[empresa.nombre]}</p>
+                
+              </div>
+            ))}
       <ul>
         <li>
           <Link to={LOGIN}>Login</Link>
         </li>
         <li>
-        {usuario &&
-        usuario.map((usuario) => (
-          <div key={usuario._id}>
-            <Link to={`/perfil/${usuario._id}`}>
-              <p>{usuario.nombre}</p>
-            </Link>
-          </div>
-        ))}
+          {usuario &&
+            usuario.map((usuario) => (
+              <div key={usuario._id}>
+                <Link to={PERFIL}>
+                  <p>{usuario.nombre}</p>
+                </Link>
+              </div>
+            ))}
         </li>
         <li>
           <Link to={REGISTRO}>Registro</Link>
