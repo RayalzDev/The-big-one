@@ -1,24 +1,20 @@
 import { createContext, useState, useContext } from "react";
 
 const LogeadoContext = createContext({
-  info:{},
-  setInfo: () => {}
+  info: {},
+  setInfo: () => {},
 });
 
 export default function LogeadoContextProvider({ children }) {
-  
   const [info, setInfo] = useState({});
 
   const value = {
     info,
-    setInfo
-  }
+    setInfo,
+  };
 
   return (
-   
-    <LogeadoContext.Provider value={value}>
-      {children}
-    </LogeadoContext.Provider>
+    <LogeadoContext.Provider value={LogeadoContext}>{children}</LogeadoContext.Provider>
   );
 }
 

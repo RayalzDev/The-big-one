@@ -1,14 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
-import { USUARIO } from "../../config/settings";
+import { USUARIO, UNUSUARIO } from "../../config/settings";
 import useLogeadoContext from "../../Contexts/LogeadoContext";
-import Navbar from "../../Components/Navbar"
+import Navbar from "../../Components/Navbar";
 
 export default function Perfil() {
-  // const usuario = JSON.parse(localStorage.getItem('usuario'));
-
   const [usuario, setUsuario] = useState(
-    JSON.parse(localStorage.getItem("usuario"))
+     JSON.parse(localStorage.getItem("usuario"))
   );
 
   const [editando, setEditando] = useState(null);
@@ -43,25 +41,24 @@ export default function Perfil() {
     await fetch(USUARIO, requestUsuario);
     navigate("/");
   }
-  // const params = useParams();
-  // console.log(usuario)
-  // useEffect(
-  //   function () {
-  //     async function fetchUsuario() {
-  //       const response = await fetch(`${USUARIO}${params._id}`);
-  //       const usuario = await response.json();
-  //       setUsuario(usuario);
-  //     }
-  //     fetchUsuario();
-  //   },
-  //   []
-  // );
+  const params = useParams();
+  console.log(params)
+  useEffect(
+    function () {
+      async function fetchUsuario() {
+        const response = await fetch(`${UNUSUARIO}${params}`);
+        const usuario = await response.json();
+        setUsuario(usuario);
+      }
+      fetchUsuario();
+    },
+    []
+  );
   //Para el tema favoritos, llamamos al usuario, sacamos los nombres de las empresas que tenga en favoritos y luego usamos esos
   //nombres para llamar a una empresa con ese nombre y luego lo pintamos en pantalla.
 
   return (
     <div>
-    
       <h1>Perfil</h1>
       <div>
         {usuario && (
@@ -94,7 +91,7 @@ export default function Perfil() {
                 <p>id: {usuario._id}</p>
                 <p>Cartera: {usuario.cartera}</p>
                 <select>
-                  <option>{usuario.favoritos}</option>               
+                  <option>{usuario.favoritos}</option>
                 </select>
                 <button onClick={() => removeUsuario(usuario.nombre)}>
                   Eliminar

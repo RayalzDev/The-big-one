@@ -3,6 +3,7 @@ import { HOME, REGISTRO } from "../../Routes/paths";
 import { useState } from "react";
 import { LOGIN } from "../../config/settings";
 import { useLogeadoContext } from "../../Contexts/LogeadoContext";
+import { Form, Button } from "react-bootstrap/";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ export default function Login() {
     console.log(data);
 
     localStorage.setItem("usuario", JSON.stringify(data));
-    
+
     if (respuesta.status === 200) {
       navigate(HOME);
     }
@@ -44,29 +45,36 @@ export default function Login() {
   return (
     <div>
       <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Nombre</label>
-          <input
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3" controlId="formBasicText">
+          <Form.Label>Usuario</Form.Label>
+          <Form.Control
             type="text"
+            placeholder="Introduce tu usuario"
             name="nombre"
-            placeholder="Nombre"
             value={usuario.nombre}
             onChange={handleInputs}
           />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Contraseña</label>
-          <input
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             type="password"
+            placeholder="Introduce la contraseña"
             name="contraseña"
-            placeholder="Contraseña"
             value={usuario.contraseña}
             onChange={handleInputs}
           />
-        </div>
-        <button>Submit</button>
-      </form>
+          <Form.Text className="text-muted">
+            Tus datos no se compartirán a menos que los podamos vender.
+          </Form.Text>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicCheckbox"></Form.Group>
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
       <Link to={REGISTRO}>Registrarse</Link>
     </div>
   );

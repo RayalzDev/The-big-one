@@ -26,7 +26,7 @@ app.get("/usuario", async function (request, response) {
   let database = db.db("big_one_server");
   await database
     .collection("usuarios")
-    .find({ _id: { $eq: request.body.id } })
+    .find()
     .toArray((err, results) => {
       if (!results) {
         response.status(404).send("El usuario no existe");
@@ -37,17 +37,17 @@ app.get("/usuario", async function (request, response) {
 
 //Obtener un usuario
 
-app.get("/unusuario/", async function (request, response) {
+app.get("/usuario/:id", async function (request, response) {
   let database = db.db("big_one_server");
   await database
-  .collection("usuarios")
-  .findOne({ _id: { $eq: request.body.id } }, (err, results) => {
-    if (!results) {
-      response.status(404).send("Usuario no encontrado");
-    }
+    .collection("usuarios")
+    .findOne({ _id: ObjectId(request.params._id) }, (err, results) => {
+      if (!results) {
+        response.status(404).send("Usuario no encontrado");
+      }
 
-    response.status(200).send(results);
-  });
+      response.status(200).send(results);
+    });
 });
 //Crear usuario
 
@@ -82,7 +82,17 @@ app.put("/usuario", async function (request, response) {
   let database = db.db("big_one_server");
   await database
     .collection("usuarios")
-    .updateOne({ _id: ObjectId(request.body._id) }, { $set: request.body });
+    .updateOne(
+      { _id: ObjectId(request.body._id) },
+      {
+        $set: request.body.nombre,
+        $set: request.body.contraseña,
+        $set: request.body.foto,
+        $set: request.body.favoritos,
+        $set: request.body.cartera,
+        $set: request.body.acciones
+      }
+    );
   response.json("usuario modificado");
 });
 

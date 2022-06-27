@@ -17,19 +17,18 @@ export default function Home() {
     [usuarios]
   );
 
-  console.log(usuarios)
-  console.log(empresas)
+  console.log(usuarios);
+  console.log(empresas);
   return (
     <div>
       <h1>Home</h1>
       {empresas &&
-            empresas.map((empresa) => (
-              <div key={empresa._id}>
-                
-                  <p>{[empresa.nombre]}</p>
-                
-              </div>
-            ))}
+        empresas.map((empresa) => (
+          <div key={empresa._id}>
+            <Link to={PERFIL}><p>{empresa.name}</p>
+            </Link>
+          </div>
+        ))}
       <ul>
         <li>
           <Link to={LOGIN}>Login</Link>
