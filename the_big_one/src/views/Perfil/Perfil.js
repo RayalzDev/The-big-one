@@ -6,14 +6,16 @@ import Navbar from "../../Components/Navbar";
 
 export default function Perfil() {
   const [usuario, setUsuario] = useState(
-     JSON.parse(localStorage.getItem("usuario"))
+     null
   );
+
+  /* const user = useLogeadoContext();
+
+  console.log(user) */
 
   const [editando, setEditando] = useState(null);
 
   const navigate = useNavigate();
-
-  console.log(usuario);
 
   async function handleSubmit(event) {
     const requestUsuario = {
@@ -60,7 +62,7 @@ export default function Perfil() {
   return (
     <div>
       <h1>Perfil</h1>
-      <div>
+      {/* <div>
         {usuario && (
           <>
             {editando ? (
@@ -101,7 +103,9 @@ export default function Perfil() {
             )}
           </>
         )}
-      </div>
+      </div> */}
+              
+
     </div>
   );
 }

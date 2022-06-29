@@ -14,7 +14,7 @@ export default function LogeadoContextProvider({ children }) {
   };
 
   return (
-    <LogeadoContext.Provider value={LogeadoContext}>{children}</LogeadoContext.Provider>
+    <LogeadoContext.Provider value={value}>{children}</LogeadoContext.Provider>
   );
 }
 

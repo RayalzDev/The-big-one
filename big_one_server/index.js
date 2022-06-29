@@ -37,13 +37,13 @@ app.get("/usuario", async function (request, response) {
 
 //Obtener un usuario
 
-app.get("/usuario/:id", async function (request, response) {
+app.get("/unusuario/", async function (request, response) {
   let database = db.db("big_one_server");
   await database
     .collection("usuarios")
-    .findOne({ _id: ObjectId(request.params._id) }, (err, results) => {
+    .findOne({ name: { $eq: request.body.name } }, (err, results) => {
       if (!results) {
-        response.status(404).send("Usuario no encontrado");
+        response.status(404).send("Empresa no encontrada");
       }
 
       response.status(200).send(results);
@@ -85,12 +85,12 @@ app.put("/usuario", async function (request, response) {
     .updateOne(
       { _id: ObjectId(request.body._id) },
       {
-        $set: request.body.nombre,
-        $set: request.body.contraseña,
-        $set: request.body.foto,
-        $set: request.body.favoritos,
-        $set: request.body.cartera,
-        $set: request.body.acciones
+        $mod: request.body.nombre,
+        $mod: request.body.contraseña,
+        $mod: request.body.foto,
+        $mod: request.body.favoritos,
+        $mod: request.body.cartera,
+        $mod: request.body.acciones
       }
     );
   response.json("usuario modificado");
@@ -155,7 +155,7 @@ app.get("/empresas", async function (request, response) {
 
 //Obtener una empresa
 
-app.get("/empresas/", async function (request, response) {
+app.get("/empresas", async function (request, response) {
   let database = db.db("big_one_server");
 
   await database

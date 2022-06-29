@@ -32,7 +32,7 @@ export default function Login() {
     const respuesta = await fetch(LOGIN, requestUsuario);
     const data = await respuesta.json();
 
-    console.log(data);
+    console.log({data});
 
     localStorage.setItem("usuario", JSON.stringify(data));
 
@@ -40,6 +40,7 @@ export default function Login() {
       navigate(HOME);
     }
     setInfo(data);
+    
   }
 
   return (

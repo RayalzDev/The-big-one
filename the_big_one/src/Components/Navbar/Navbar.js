@@ -8,10 +8,11 @@ import {
   FormControl,
   Offcanvas,
 } from "react-bootstrap/";
+import {Link} from 'react-router-dom';
 import { PERFIL, HOME } from "../../Routes/paths";
 
 export default function Navegacion() {
-  const usuario = JSON.parse(localStorage.getItem("usuario"));
+ const usuario = JSON.parse(localStorage.getItem("usuario"));
 
   return (
     <>
@@ -44,7 +45,7 @@ export default function Navegacion() {
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Nav.Link href="#action1">Inicio</Nav.Link>
-                  <Nav.Link href={PERFIL}>Perfil</Nav.Link>
+                  <Link to={PERFIL}>Perfil</Link>
                   <Nav.Item type="number">{usuario.cartera}</Nav.Item>
                   <NavDropdown
                     title="Acciones"
