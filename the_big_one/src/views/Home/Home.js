@@ -3,7 +3,6 @@ import { LOGIN, REGISTRO, PERFIL } from "../../Routes/paths";
 import useFetch from "../../hooks/useFetch";
 import { useState, useEffect } from "react";
 import { EMPRESAS, USUARIO } from "../../config/settings";
-import Navbar from "../../Components/Navbar";
 
 export default function Home() {
   const [usuario, setUsuario] = useState(null);
@@ -17,8 +16,6 @@ export default function Home() {
     [usuarios]
   );
 
-  console.log(usuarios);
-  console.log(empresas);
   return (
     <div>
       <h1>Home</h1>

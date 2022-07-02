@@ -11,8 +11,9 @@ import {
 import {Link} from 'react-router-dom';
 import { PERFIL, HOME } from "../../Routes/paths";
 
+
 export default function Navegacion() {
- const usuario = JSON.parse(localStorage.getItem("usuario"));
+  const usuario = JSON.parse(localStorage.getItem("usuario"))
 
   return (
     <>

@@ -85,21 +85,22 @@ app.put("/usuario", async function (request, response) {
     .updateOne(
       { _id: ObjectId(request.body._id) },
       {
-        $mod: request.body.nombre,
-        $mod: request.body.contraseña,
-        $mod: request.body.foto,
-        $mod: request.body.favoritos,
-        $mod: request.body.cartera,
-        $mod: request.body.acciones
+        $set: request.body.nombre,
+        $set: request.body.contraseña,
+        $set: request.body.foto,
+        $set: request.body.favoritos,
+        $set: request.body.cartera,
+        $set: request.body.acciones
       }
     );
-  response.json("usuario modificado");
+  response.json(response);
 });
 
 //Borrar usuario
 
 app.delete("/usuario", async function (request, response) {
   let database = db.db("big_one_server");
+  console.log(request.body);
   await database
     .collection("usuarios")
     .deleteOne({ _id: ObjectId(request.body._id) });

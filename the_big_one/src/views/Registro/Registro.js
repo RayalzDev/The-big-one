@@ -95,6 +95,16 @@ export default function Registro() {
             onChange={handleInputs}
           />
         </div>
+        <div className="mb-3">
+          <label className="form-label">Imagen</label>
+          <input
+            type="text"
+            name="favoritos"
+            aria-describedby="emailHelp"
+            value={nuevoUsuario.favoritos}
+            onChange={handleInputs}
+          />
+          </div>
         <button>Submit</button>
       </form>
     </div>

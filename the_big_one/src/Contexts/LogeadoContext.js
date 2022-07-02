@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext,useMemo } from "react";
 
 const LogeadoContext = createContext({
   info: {},
@@ -6,12 +6,12 @@ const LogeadoContext = createContext({
 });
 
 export default function LogeadoContextProvider({ children }) {
-  const [info, setInfo] = useState({});
+  const [info, setInfo] = useState( null);
 
-  const value = {
+  const value =useMemo(()=> ({
     info,
     setInfo,
-  };
+  }),[info,setInfo])
 
   return (
     <LogeadoContext.Provider value={value}>{children}</LogeadoContext.Provider>
