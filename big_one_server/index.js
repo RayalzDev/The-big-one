@@ -82,17 +82,7 @@ app.put("/usuario", async function (request, response) {
   let database = db.db("big_one_server");
   await database
     .collection("usuarios")
-    .updateOne(
-      { _id: ObjectId(request.body._id) },
-      {
-        $set: request.body.nombre,
-        $set: request.body.contraseña,
-        $set: request.body.foto,
-        $set: request.body.favoritos,
-        $set: request.body.cartera,
-        $set: request.body.acciones
-      }
-    );
+    .updateOne({ _id: ObjectId(request.body._id), $set: request.body });
   response.json(response);
 });
 
@@ -156,12 +146,12 @@ app.get("/empresas", async function (request, response) {
 
 //Obtener una empresa
 
-app.get("/empresas", async function (request, response) {
+app.get("/empresas/:name", async function (request, response) {
   let database = db.db("big_one_server");
 
   await database
     .collection("empresas")
-    .findOne({ name: { $eq: request.body.name } }, (err, results) => {
+    .findOne({ name: { $eq: request.params.name } }, (err, results) => {
       if (!results) {
         response.status(404).send("Empresa no encontrada");
       }

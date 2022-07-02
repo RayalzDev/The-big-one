@@ -63,7 +63,7 @@ export default function Navegacion() {
                     id={`offcanvasNavbarDropdown-expand-${expand}`}
                   >
                     {usuario.favoritos.forEach((empresa) => (
-                      <NavDropdown.Item>{empresa}</NavDropdown.Item>
+                      <NavDropdown.Item>{empresa.name}</NavDropdown.Item>
                     ))}
                   </NavDropdown>
                   <NavDropdown.Divider />

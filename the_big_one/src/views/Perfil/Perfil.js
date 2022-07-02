@@ -2,9 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { USUARIO } from "../../config/settings";
 
-
 export default function Perfil() {
-  const [usuario, setUsuario] = useState(JSON.parse(localStorage.getItem("usuario")));
+  const [usuario, setUsuario] = useState(
+    JSON.parse(localStorage.getItem("usuario"))
+  );
   const [editando, setEditando] = useState(null);
 
   const navigate = useNavigate();
@@ -84,7 +85,6 @@ export default function Perfil() {
           </>
         )}
       </div>
-      
     </div>
   );
 }

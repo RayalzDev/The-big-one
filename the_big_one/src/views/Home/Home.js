@@ -22,7 +22,8 @@ export default function Home() {
       {empresas &&
         empresas.map((empresa) => (
           <div key={empresa._id}>
-            <Link to={PERFIL}><p>{empresa.name}</p>
+            <Link to={`/empresa/${empresa.name}`}>
+              <p>{empresa.name}</p>
             </Link>
           </div>
         ))}

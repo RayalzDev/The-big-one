@@ -37,7 +37,6 @@ export default function Login() {
     if (respuesta.status === 200) {
       navigate(HOME);
     }
-    
   }
 
   return (
