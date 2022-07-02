@@ -4,14 +4,14 @@ import Login from "./views/Login";
 import Perfil from "./views/Perfil";
 import Registro from "./views/Registro";
 import PerfilEmpresa from "./views/PerfilEmpresa";
-import { LOGIN, REGISTRO, PERFIL, AUX, LAYOUT, EMPRESA } from "./Routes/paths";
+import { REGISTRO, PERFIL, AUX, LAYOUT, EMPRESA } from "./Routes/paths";
 import Layout from "./Components/Layout";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={LOGIN} element={<Login />} />
+        <Route index element={<Login />} />
         <Route path={LAYOUT} element={<Layout />}>
           <Route index element={<Home />} />
           <Route path={REGISTRO} element={<Registro />} />
