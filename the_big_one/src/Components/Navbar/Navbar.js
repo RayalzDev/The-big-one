@@ -8,13 +8,15 @@ import {
   FormControl,
   Offcanvas,
 } from "react-bootstrap/";
+import { useNavigate } from "react-router-dom";
 import { PERFIL, HOME } from "../../Routes/paths";
 
 export default function Navegacion() {
+  const navigate = useNavigate();
   const usuario = JSON.parse(localStorage.getItem("usuario"));
-  function Logout(event) {
-    event.preventDefault();
+  function logout(event) {
     localStorage.clear("usuario");
+    navigate("/")
   }
   return (
     <>
@@ -69,7 +71,7 @@ export default function Navegacion() {
                   </NavDropdown>
                   <NavDropdown.Divider />
                   <Form>
-                    <Button variant="primary" type="submit">Log Out</Button>
+                    <Button variant="primary" onClick={logout}>Log Out</Button>
                   </Form>
                 </Nav>
               </Offcanvas.Body>
