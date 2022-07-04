@@ -8,16 +8,18 @@ import {
   FormControl,
   Offcanvas,
 } from "react-bootstrap/";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { PERFIL, HOME } from "../../Routes/paths";
 
 export default function Navegacion() {
   const navigate = useNavigate();
   const usuario = JSON.parse(localStorage.getItem("usuario"));
-  function logout(event) {
+
+  function logout() {
     localStorage.clear("usuario");
-    navigate("/")
+    navigate("/");
   }
+  console.log(usuario);
   return (
     <>
       {[false].map((expand) => (
@@ -55,9 +57,12 @@ export default function Navegacion() {
                     title="Acciones"
                     id={`offcanvasNavbarDropdown-expand-${expand}`}
                   >
-                    {usuario.acciones.forEach((empresa) => (
+                    {usuario.acciones.map((empresa) => (
                       <NavDropdown.Item>
-                        {empresa.nombre} - {empresa.cantidad}
+                        <Link to={`/empresa/${empresa.nombre}`}>
+                          {empresa.nombre} - {empresa.cantidad}
+                        </Link>
+                        {console.log(empresa)}
                       </NavDropdown.Item>
                     ))}
                   </NavDropdown>
@@ -65,13 +70,17 @@ export default function Navegacion() {
                     title="Favoritos"
                     id={`offcanvasNavbarDropdown-expand-${expand}`}
                   >
-                    {usuario.favoritos.forEach((empresa) => (
-                      <NavDropdown.Item>{empresa.name}</NavDropdown.Item>
+                    {usuario.favoritos.map((empresa) => (
+                      <NavDropdown.Item>
+                        <Link to={`/empresa/${empresa}`}>{empresa}</Link>
+                      </NavDropdown.Item>
                     ))}
                   </NavDropdown>
                   <NavDropdown.Divider />
                   <Form>
-                    <Button variant="primary" onClick={logout}>Log Out</Button>
+                    <Button variant="primary" onClick={logout}>
+                      Log Out
+                    </Button>
                   </Form>
                 </Nav>
               </Offcanvas.Body>

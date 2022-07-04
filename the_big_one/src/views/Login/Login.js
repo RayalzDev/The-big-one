@@ -68,7 +68,8 @@ export default function Login() {
     };
 
     await fetch(USUARIO, requestUsuario);
-    navigate(HOME);
+    localStorage.setItem("usuario", JSON.stringify(nuevoUsuario));
+    navigate(HOME)
   }
   return (
     <div>
