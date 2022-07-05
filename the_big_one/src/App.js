@@ -2,9 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./views/Home";
 import Login from "./views/Login";
 import Perfil from "./views/Perfil";
-import Registro from "./views/Registro";
+import Footer from "./Components/Footer";
 import PerfilEmpresa from "./views/PerfilEmpresa";
-import { REGISTRO, PERFIL, AUX, LAYOUT, EMPRESA } from "./Routes/paths";
+import { PERFIL, AUX, LAYOUT, EMPRESA } from "./Routes/paths";
 import Layout from "./Components/Layout";
 
 function App() {
@@ -19,6 +19,7 @@ function App() {
           <Route path={EMPRESA} element={<PerfilEmpresa />}></Route>
         </Route>
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

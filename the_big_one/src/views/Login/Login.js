@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { HOME } from "../../Routes/paths";
 import { useState } from "react";
 import { LOGIN, USUARIO } from "../../config/settings";
-import { Form, Button, Modal } from "react-bootstrap/";
+import { Form, Button, Modal, Container, Col, Row } from "react-bootstrap/";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -69,111 +69,138 @@ export default function Login() {
 
     await fetch(USUARIO, requestUsuario);
     localStorage.setItem("usuario", JSON.stringify(nuevoUsuario));
-    navigate(HOME)
+    navigate(HOME);
   }
   return (
-    <div>
-      <h1>Login</h1>
-      <Form onSubmit={handleSubmitLogin}>
-        <Form.Group className="mb-3" controlId="formBasicText">
-          <Form.Label>Usuario</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Introduce tu usuario"
-            name="nombre"
-            value={usuario.nombre}
-            onChange={handleInputsLogin}
-          />
-        </Form.Group>
+    <Container >
+      <div>
+        <Row>
+          <h1>Login</h1>
+        </Row>
+        <Row>
+          <Col sm={8}>
+            <Form onSubmit={handleSubmitLogin}>
+              <Form.Group className="mb-3" controlId="formBasicText">
+                <Form.Label>Usuario</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Introduce tu usuario"
+                  name="nombre"
+                  value={usuario.nombre}
+                  onChange={handleInputsLogin}
+                />
+              </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Introduce la contraseña"
-            name="contraseña"
-            value={usuario.contraseña}
-            onChange={handleInputsLogin}
-          />
-          <Form.Text className="text-muted">
-            Tus datos no se compartirán a menos que los podamos vender.
-          </Form.Text>
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicCheckbox"></Form.Group>
-        <Button variant="primary" type="submit">
-          Entrar
-        </Button>
-      </Form>
-      <Button variant="primary" onClick={handleShow}>
-        Regístrate
-      </Button>
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Registro</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmitRegistro}>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Nombre"
-                name="nombre"
-                value={nuevoUsuario.nombre}
-                onChange={handleInputsRegistro}
-                autoFocus
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlImput2">
-              <Form.Label>Contraseña</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Contraseña"
-                name="contraseña"
-                value={nuevoUsuario.contraseña}
-                onChange={handleInputsRegistro}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlImput3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Email"
-                name="email"
-                value={nuevoUsuario.email}
-                onChange={handleInputsRegistro}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlImput4">
-              <Form.Label>Imagen</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Imagen"
-                name="foto"
-                value={nuevoUsuario.foto}
-                onChange={handleInputsRegistro}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlImput5">
-              <Form.Label>Dinero</Form.Label>
-              <Form.Control
-                type="number"
-                name="cartera"
-                value={nuevoUsuario.cartera}
-                onChange={handleInputsRegistro}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="danger" onClick={handleClose}>
-            Cerrar
-          </Button>
-          <Button variant="primary" onClick={handleSubmitRegistro}>
-            Registrarse
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Introduce la contraseña"
+                  name="contraseña"
+                  value={usuario.contraseña}
+                  onChange={handleInputsLogin}
+                />
+                <Form.Text className="text-muted">
+                  Tus datos no se compartirán a menos que los podamos vender.
+                </Form.Text>
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="formBasicCheckbox"
+              ></Form.Group>
+              <Button variant="primary" type="submit">
+                Entrar
+              </Button>
+              <Button variant="primary" onClick={handleShow}>
+              Regístrate
+            </Button>
+            </Form>
+          </Col>
+            
+        </Row>
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Registro</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={handleSubmitRegistro}>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label>Nombre</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Nombre"
+                  name="nombre"
+                  value={nuevoUsuario.nombre}
+                  onChange={handleInputsRegistro}
+                  autoFocus
+                />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlImput2"
+              >
+                <Form.Label>Contraseña</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Contraseña"
+                  name="contraseña"
+                  value={nuevoUsuario.contraseña}
+                  onChange={handleInputsRegistro}
+                />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlImput3"
+              >
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Email"
+                  name="email"
+                  value={nuevoUsuario.email}
+                  onChange={handleInputsRegistro}
+                />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlImput4"
+              >
+                <Form.Label>Imagen</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Imagen"
+                  name="foto"
+                  value={nuevoUsuario.foto}
+                  onChange={handleInputsRegistro}
+                />
+              </Form.Group>
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlImput5"
+              >
+                <Form.Label>Dinero</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="cartera"
+                  value={nuevoUsuario.cartera}
+                  onChange={handleInputsRegistro}
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={handleClose}>
+              Cerrar
+            </Button>
+            <Button variant="primary" onClick={handleSubmitRegistro}>
+              Registrarse
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    </Container>
   );
 }

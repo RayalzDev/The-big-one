@@ -4,7 +4,6 @@ const md5 = require("nodejs-md5");
 const { response } = express();
 const app = express();
 const cors = require("cors");
-const jwt = require("jsonwebtoken");
 app.use(cors());
 app.use(express.json());
 let db = null;
@@ -79,10 +78,19 @@ app.post("/usuario", async function (request, response) {
 //Editar usuario
 
 app.put("/usuario", async function (request, response) {
+  console.log(request.body);
   let database = db.db("big_one_server");
-  await database
-    .collection("usuarios")
-    .updateOne({ _id: ObjectId(request.body._id), $set: request.body });
+  await database.collection("usuarios").updateOne({
+    _id: ObjectId(request.body._id)}, {$set: {
+      nombre: request.body.nombre,
+      email: request.body.email,
+      foto: request.body.foto,
+      cartera: request.body.cartera,
+      favoritos: request.body.favoritos,
+      acciones: request.body.acciones,
+      rol: request.body.rol,
+    }
+  });
   response.json(response);
 });
 

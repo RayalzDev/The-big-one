@@ -41,7 +41,7 @@ export default function Perfil() {
   //nombres para llamar a una empresa con ese nombre y luego lo pintamos en pantalla.
 
   return (
-    <div>
+    <div >
       <h1>Perfil</h1>
       <div>
         {usuario && (

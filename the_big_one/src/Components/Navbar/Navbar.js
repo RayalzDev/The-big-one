@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap/";
 import { useNavigate, Link } from "react-router-dom";
 import { PERFIL, HOME } from "../../Routes/paths";
+import {useState} from "react"
 
 export default function Navegacion() {
   const navigate = useNavigate();
@@ -19,21 +20,49 @@ export default function Navegacion() {
     localStorage.clear("usuario");
     navigate("/");
   }
-  console.log(usuario);
+
+
+  const [buscarEmpresa, setbuscarEmpresa] = useState({
+    name: "",
+    });
+
+  const baseBusqueda = {
+    name: ""
+  };
+
+  const [busqueda, setBusqueda] = useState(baseBusqueda);
+
+  function handleBusqueda(event) {
+    setBusqueda((busqueda) => ({
+      ...busqueda,
+      [event.target.name]: event.target.value,
+    }));
+  }
+
+  function handleSubmitBusqueda(event) {
+    event.preventDefault();
+    setbuscarEmpresa(busqueda);
+  }
+
+  console.log(busqueda);
   return (
     <>
       {[false].map((expand) => (
         <Navbar key={expand} bg="light" expand={false} className="mb-3">
           <Container fluid>
             <Navbar.Brand href={HOME}>Mi Pagina</Navbar.Brand>
-            <Form className="d-flex">
+            <Form className="d-flex" onSubmit={handleSubmitBusqueda}>
               <FormControl
                 type="search"
                 placeholder="Search"
                 className="me-2"
                 aria-label="Search"
+                name="name"
+                onChange={handleBusqueda}
               />
-              <Button variant="outline-light bg-primary">Search</Button>
+              <Button variant="outline-light bg-primary" type="submit">
+                Search
+              </Button>
             </Form>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
 
@@ -62,7 +91,6 @@ export default function Navegacion() {
                         <Link to={`/empresa/${empresa.nombre}`}>
                           {empresa.nombre} - {empresa.cantidad}
                         </Link>
-                        {console.log(empresa)}
                       </NavDropdown.Item>
                     ))}
                   </NavDropdown>
