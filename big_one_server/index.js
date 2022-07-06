@@ -4,6 +4,7 @@ const md5 = require("nodejs-md5");
 const { response } = express();
 const app = express();
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 app.use(cors());
 app.use(express.json());
 let db = null;
@@ -36,18 +37,18 @@ app.get("/usuario", async function (request, response) {
 
 //Obtener un usuario
 
-app.get("/unusuario/", async function (request, response) {
+app.get("/usuarios/:id", async function (request, response) {
   let database = db.db("big_one_server");
-  await database
-    .collection("usuarios")
-    .findOne({ name: { $eq: request.body.name } }, (err, results) => {
+  await database.collection("usuarios").findOne({ _id: { $eq: ObjectId(request.params.id) } },
+     async function (err, results) {
       if (!results) {
-        response.status(404).send("Empresa no encontrada");
+        response.status(404).send("usuario no encontrado");
       }
 
       response.status(200).send(results);
     });
 });
+
 //Crear usuario
 
 app.post("/usuario", async function (request, response) {
@@ -77,28 +78,21 @@ app.post("/usuario", async function (request, response) {
 
 //Editar usuario
 
-app.put("/usuario", async function (request, response) {
-  console.log(request.body);
+app.put("/usuario/:id", async function (request, response) {
   let database = db.db("big_one_server");
-  await database.collection("usuarios").updateOne({
-    _id: ObjectId(request.body._id)}, {$set: {
-      nombre: request.body.nombre,
-      email: request.body.email,
-      foto: request.body.foto,
-      cartera: request.body.cartera,
-      favoritos: request.body.favoritos,
-      acciones: request.body.acciones,
-      rol: request.body.rol,
-    }
-  });
-  response.json(response);
+  await database
+    .collection("usuarios")
+    .updateOne(
+      { _id: { $eq: ObjectId(request.params.id) } },
+      { $set: request.body }
+    );
+  response.json("usuario modificado");
 });
 
 //Borrar usuario
 
 app.delete("/usuario", async function (request, response) {
   let database = db.db("big_one_server");
-  console.log(request.body);
   await database
     .collection("usuarios")
     .deleteOne({ _id: ObjectId(request.body._id) });

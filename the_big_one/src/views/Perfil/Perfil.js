@@ -1,22 +1,46 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import { USUARIO } from "../../config/settings";
+import { USUARIO, EDITUSUARIO, UNUSUARIO } from "../../config/settings";
+import useFetch from "../../hooks/useFetch";
 
 export default function Perfil() {
-  const [usuario, setUsuario] = useState(
-    JSON.parse(localStorage.getItem("usuario"))
-  );
+
+  const params = useParams();
+  console.log(params);
+
+  const { _id } = params;
+
+  // const aux = useFetch(UNUSUARIO.replace("<ID>", _id));
+const aux = JSON.parse(localStorage.getItem("usuario"))
+
+
+
+  const [usuario, setUsuario] = useState({
+    nombre: aux?.nombre ?? "",
+    contraseña: aux?.contraseña ?? "",
+    email: aux?.email ?? "",
+    foto: aux?.foto ?? "",
+    cartera: aux?.cartera ?? 0,
+    favoritos: aux?.favoritos ?? [],
+    acciones: aux?.acciones ?? [],
+    rol: aux?.rol ?? "",
+  });
+  console.log(aux);
+
+  console.log(usuario);
+
   const [editando, setEditando] = useState(null);
 
   const navigate = useNavigate();
 
-  async function handleSubmit(event) {
+  async function handleSubmit() {
     const requestUsuario = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(usuario),
     };
-    await fetch(USUARIO, requestUsuario);
+    await fetch(EDITUSUARIO.replace("<ID>", aux._id), requestUsuario);
+    localStorage.setItem("usuario", JSON.stringify(usuario));
     // setEditando(false);
   }
 
@@ -41,7 +65,7 @@ export default function Perfil() {
   //nombres para llamar a una empresa con ese nombre y luego lo pintamos en pantalla.
 
   return (
-    <div >
+    <div>
       <h1>Perfil</h1>
       <div>
         {usuario && (
@@ -71,7 +95,7 @@ export default function Perfil() {
             ) : (
               <>
                 <p>Nombre: {usuario.nombre}</p>
-                <p>id: {usuario._id}</p>
+                <p>contraseña: {usuario.contraseña}</p>
                 <p>Cartera: {usuario.cartera}</p>
                 <select>
                   <option>{usuario.favoritos}</option>

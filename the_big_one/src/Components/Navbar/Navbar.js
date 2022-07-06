@@ -80,7 +80,7 @@ export default function Navegacion() {
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Nav.Link href={HOME}>Inicio</Nav.Link>
-                  <Nav.Link href={PERFIL}>Perfil</Nav.Link>
+                  <Nav.Link href={`/perfil/${usuario._id}`}>Perfil</Nav.Link>
                   <Nav.Item type="number">{usuario.cartera}</Nav.Item>
                   <NavDropdown
                     title="Acciones"

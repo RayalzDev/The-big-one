@@ -39,19 +39,24 @@ export default function PerfilEmpresa() {
       },
       title: {
         display: true,
-        text: "Chart.js Line Chart",
+        text: empresa?.name ?? '',
       },
     },
   };
 
   const labels = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre", 
+    "Noviembre",
+    "Diciembre"
   ];
   
   const data = {
@@ -59,7 +64,7 @@ export default function PerfilEmpresa() {
     datasets: [
       {
         label: "Evolucion de bolsa",
-        data: labels.map(() => Math.floor(Math.random() * 150)),
+        data: labels.map(() => Math.floor(Math.random() * (200 - 100) + 100 )),
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
