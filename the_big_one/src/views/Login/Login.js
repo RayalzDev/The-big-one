@@ -3,19 +3,15 @@ import { HOME } from "../../Routes/paths";
 import { useState } from "react";
 import { LOGIN, USUARIO } from "../../config/settings";
 import { Form, Button, Modal, Container, Col, Row } from "react-bootstrap/";
-
+import { useLogeadoContext } from "../../Contexts/LogeadoContext";
 export default function Login() {
+const {setInfo} = useLogeadoContext()
+
   const navigate = useNavigate();
-  const [nuevoUsuario, setNuevoUsuario] = useState({
-    nombre: "",
-    contraseña: "",
-    email: "",
-    foto: "",
-    cartera: 0,
-    favoritos: [],
-    acciones: [],
-    rol: "usuario",
-  });
+
+
+ 
+  //      Manejador de modal
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -46,11 +42,24 @@ export default function Login() {
     console.log({ data });
 
     localStorage.setItem("usuario", JSON.stringify(data));
+    setInfo(data);
 
     if (respuesta.status === 200) {
       navigate(HOME);
     }
   }
+
+  const [nuevoUsuario, setNuevoUsuario] = useState({
+    nombre: "",
+    contraseña: "",
+    email: "",
+    foto: "",
+    cartera: 0,
+    favoritos: [],
+    acciones: [],
+    rol: "usuario",
+  });
+  
   function handleInputsRegistro(event) {
     setNuevoUsuario((usuario) => ({
       ...usuario,
@@ -72,13 +81,13 @@ export default function Login() {
     navigate(HOME);
   }
   return (
-    <Container >
-      <div>
+    <Container className="p-4" style={{height:"100vh"}}>
+      <div >
         <Row>
-          <h1>Login</h1>
+          <h1 className="text-center">Login</h1>
         </Row>
-        <Row>
-          <Col sm={8}>
+        <Row className="justify-content-center align-content-center">
+          <Col md="auto">
             <Form onSubmit={handleSubmitLogin}>
               <Form.Group className="mb-3" controlId="formBasicText">
                 <Form.Label>Usuario</Form.Label>
@@ -111,10 +120,10 @@ export default function Login() {
               <Button variant="primary" type="submit">
                 Entrar
               </Button>
+            </Form>
               <Button variant="primary" onClick={handleShow}>
               Regístrate
             </Button>
-            </Form>
           </Col>
             
         </Row>

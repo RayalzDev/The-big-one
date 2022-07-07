@@ -2,18 +2,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { USUARIO, EDITUSUARIO, UNUSUARIO } from "../../config/settings";
 import useFetch from "../../hooks/useFetch";
+import { useLogeadoContext } from "../../Contexts/LogeadoContext";
 
 export default function Perfil() {
 
+const {info, setInfo} = useLogeadoContext();
+console.log(info);
+
   const params = useParams();
-  console.log(params);
 
   const { _id } = params;
 
-  // const aux = useFetch(UNUSUARIO.replace("<ID>", _id));
-const aux = JSON.parse(localStorage.getItem("usuario"))
+ //  const aux = useFetch(UNUSUARIO.replace("<ID>", _id));
+ const aux = JSON.parse(localStorage.getItem("usuario"))
 
-
+// const {id, ...rest} = info
 
   const [usuario, setUsuario] = useState({
     nombre: aux?.nombre ?? "",
@@ -39,9 +42,9 @@ const aux = JSON.parse(localStorage.getItem("usuario"))
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(usuario),
     };
-    await fetch(EDITUSUARIO.replace("<ID>", aux._id), requestUsuario);
-    localStorage.setItem("usuario", JSON.stringify(usuario));
-    // setEditando(false);
+    await fetch(EDITUSUARIO.replace("<ID>", _id), requestUsuario);
+     localStorage.setItem("usuario", JSON.stringify(usuario ));
+     setEditando(false);
   }
 
   function handleInputs(event) {
@@ -77,12 +80,6 @@ const aux = JSON.parse(localStorage.getItem("usuario"))
                   value={usuario.nombre}
                   onChange={handleInputs}
                   name="nombre"
-                />
-                <input
-                  type="password"
-                  value={usuario.contraseña}
-                  onChange={handleInputs}
-                  name="contraseña"
                 />
                 <input
                   type="number"

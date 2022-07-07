@@ -10,24 +10,23 @@ import {
 } from "react-bootstrap/";
 import { useNavigate, Link } from "react-router-dom";
 import { PERFIL, HOME } from "../../Routes/paths";
-import {useState} from "react"
+import { useState } from "react";
+import { useLogeadoContext } from "../../Contexts/LogeadoContext";
 
-export default function Navegacion() {
+export default function Navegacion({ setBuscarEmpresa }) {
+  const { setInfo } = useLogeadoContext();
+
   const navigate = useNavigate();
   const usuario = JSON.parse(localStorage.getItem("usuario"));
 
   function logout() {
     localStorage.clear("usuario");
+    setInfo({});
     navigate("/");
   }
 
-
-  const [buscarEmpresa, setbuscarEmpresa] = useState({
-    name: "",
-    });
-
   const baseBusqueda = {
-    name: ""
+    name: "",
   };
 
   const [busqueda, setBusqueda] = useState(baseBusqueda);
@@ -41,10 +40,9 @@ export default function Navegacion() {
 
   function handleSubmitBusqueda(event) {
     event.preventDefault();
-    setbuscarEmpresa(busqueda);
+    setBuscarEmpresa(busqueda);
   }
 
-  console.log(busqueda);
   return (
     <>
       {[false].map((expand) => (

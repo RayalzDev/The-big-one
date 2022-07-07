@@ -6,7 +6,7 @@ const LogeadoContext = createContext({
 });
 
 export default function LogeadoContextProvider({ children }) {
-  const [info, setInfo] = useState( null);
+  const [info, setInfo] = useState( JSON.parse(localStorage.getItem("usuario")) ?? null);
 
   const value =useMemo(()=> ({
     info,

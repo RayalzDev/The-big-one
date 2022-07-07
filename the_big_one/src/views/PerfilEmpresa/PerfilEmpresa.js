@@ -25,11 +25,13 @@ ChartJS.register(
 );
 
 export default function PerfilEmpresa() {
+  // Fetch a la empresa
+  
   const params = useParams();
-  console.log(params);
   const { name } = params;
   const empresa = useFetch(UNAEMPRESA.replace("<NAME>", name));
-  console.log(empresa);
+
+  // Opciones de la gráfica
 
   const options = {
     responsive: true,
@@ -43,6 +45,8 @@ export default function PerfilEmpresa() {
       },
     },
   };
+
+  // Cantidad de "puntos" de la gráfica y nombres
 
   const labels = [
     "Enero",
@@ -59,6 +63,8 @@ export default function PerfilEmpresa() {
     "Diciembre"
   ];
   
+  // Datos de la gráfica
+
   const data = {
     labels,
     datasets: [
@@ -70,6 +76,33 @@ export default function PerfilEmpresa() {
       },
     ],
   };
+
+  // Compra de acciones
+
+// function comprar (cantidad, precio){
+
+//   const total = cantidad * precio
+
+//   if (usuario.cartera >= total ){
+//     usuario.cartera - total;
+//     const requestUsuario = {
+//       method: "PUT",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(usuario.cartera, usuario),
+//     };
+//     await fetch(EDITUSUARIO.replace("<ID>", _id), requestUsuario);
+//      localStorage.setItem("usuario", JSON.stringify(usuario ));
+//      setEditando(false);
+//   }
+//   }
+// }
+
+
+  // Venta de acciones 
+
+// function vender (cantidad, precio)
+
+
   return (
     <div>
       {empresa && (

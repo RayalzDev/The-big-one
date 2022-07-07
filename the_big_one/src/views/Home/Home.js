@@ -8,7 +8,7 @@ import { Accordion } from "react-bootstrap/";
 
 export default function Home() {
   const empresas = useFetch(EMPRESAS);
-
+  
   
 
   return (
