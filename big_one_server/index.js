@@ -85,9 +85,15 @@ app.put("/usuario/:id", async function (request, response) {
     .updateOne(
       { _id: { $eq: ObjectId(request.params.id) } },
       { $set: request.body }
-    );
-  response.json("usuario modificado");
-});
+    ), async function (err, results) {
+      if (!results) {
+        response.status(404).send("usuario no encontrado");
+      }
+
+      response.status(200).send(results);
+    }});
+ 
+;
 
 //Borrar usuario
 

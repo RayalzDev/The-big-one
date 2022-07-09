@@ -5,30 +5,26 @@ import useFetch from "../../hooks/useFetch";
 import { useLogeadoContext } from "../../Contexts/LogeadoContext";
 
 export default function Perfil() {
-
-const {info, setInfo} = useLogeadoContext();
-console.log(info);
+  const { info, setInfo } = useLogeadoContext();
 
   const params = useParams();
-
   const { _id } = params;
 
- //  const aux = useFetch(UNUSUARIO.replace("<ID>", _id));
- const aux = JSON.parse(localStorage.getItem("usuario"))
+  const aux = JSON.parse(localStorage.getItem("usuario"));
 
-// const {id, ...rest} = info
+  //  const {id, ...rest} = info
 
   const [usuario, setUsuario] = useState({
-    nombre: aux?.nombre ?? "",
-    contraseña: aux?.contraseña ?? "",
-    email: aux?.email ?? "",
-    foto: aux?.foto ?? "",
-    cartera: aux?.cartera ?? 0,
-    favoritos: aux?.favoritos ?? [],
-    acciones: aux?.acciones ?? [],
-    rol: aux?.rol ?? "",
+    nombre: info?.nombre ?? "",
+    contraseña: info?.contraseña ?? "",
+    email: info?.email ?? "",
+    foto: info?.foto ?? "",
+    cartera: info?.cartera ?? 0,
+    favoritos: info?.favoritos ?? [],
+    acciones: info?.acciones ?? [],
+    rol: info?.rol ?? "",
   });
-  console.log(aux);
+  console.log(info);
 
   console.log(usuario);
 
@@ -37,14 +33,19 @@ console.log(info);
   const navigate = useNavigate();
 
   async function handleSubmit() {
+    
     const requestUsuario = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(usuario),
     };
+    usuario._id = info._id;
+
+    localStorage.setItem("usuario", JSON.stringify( usuario ));
     await fetch(EDITUSUARIO.replace("<ID>", _id), requestUsuario);
-     localStorage.setItem("usuario", JSON.stringify(usuario ));
-     setEditando(false);
+    setInfo(usuario);
+
+    setEditando(false);
   }
 
   function handleInputs(event) {
@@ -91,13 +92,13 @@ console.log(info);
               </form>
             ) : (
               <>
-                <p>Nombre: {usuario.nombre}</p>
-                <p>contraseña: {usuario.contraseña}</p>
-                <p>Cartera: {usuario.cartera}</p>
+                <p>Nombre: {info.nombre}</p>
+                <p>contraseña: {info.contraseña}</p>
+                <p>Cartera: {info.cartera}</p>
                 <select>
-                  <option>{usuario.favoritos}</option>
+                  <option>{info.favoritos}</option>
                 </select>
-                <button onClick={() => removeUsuario(usuario.nombre)}>
+                <button onClick={() => removeUsuario(info.nombre)}>
                   Eliminar
                 </button>
                 <button onClick={() => setEditando(true)}>Editar</button>

@@ -5,63 +5,52 @@ import {
   NavDropdown,
   Button,
   Form,
-  FormControl,
   Offcanvas,
+  Modal,
 } from "react-bootstrap/";
 import { useNavigate, Link } from "react-router-dom";
-import { PERFIL, HOME } from "../../Routes/paths";
+import { HOME } from "../../Routes/paths";
 import { useState } from "react";
 import { useLogeadoContext } from "../../Contexts/LogeadoContext";
+import { USUARIO } from "../../config/settings";
 
-export default function Navegacion({ setBuscarEmpresa }) {
-  const { setInfo } = useLogeadoContext();
+export default function Navegacion() {
+  const { info, setInfo } = useLogeadoContext();
 
   const navigate = useNavigate();
-  const usuario = JSON.parse(localStorage.getItem("usuario"));
+  const usuario = info;
+
+  //    Manejo del Modal
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  //      Manejo de usuario
+
+  async function borrarUsuario() {
+    const requestUsuario = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _id: usuario._id }),
+    };
+    await fetch(USUARIO, requestUsuario);
+    localStorage.clear("usuario");
+    setInfo({});
+    navigate("/");
+  }
 
   function logout() {
     localStorage.clear("usuario");
     setInfo({});
     navigate("/");
   }
-
-  const baseBusqueda = {
-    name: "",
-  };
-
-  const [busqueda, setBusqueda] = useState(baseBusqueda);
-
-  function handleBusqueda(event) {
-    setBusqueda((busqueda) => ({
-      ...busqueda,
-      [event.target.name]: event.target.value,
-    }));
-  }
-
-  function handleSubmitBusqueda(event) {
-    event.preventDefault();
-    setBuscarEmpresa(busqueda);
-  }
-
   return (
     <>
       {[false].map((expand) => (
-        <Navbar key={expand} bg="light" expand={false} className="mb-3">
-          <Container fluid>
-            <Navbar.Brand href={HOME}>Mi Pagina</Navbar.Brand>
-            <Form className="d-flex" onSubmit={handleSubmitBusqueda}>
-              <FormControl
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-                name="name"
-                onChange={handleBusqueda}
-              />
-              <Button variant="outline-light bg-primary" type="submit">
-                Search
-              </Button>
-            </Form>
+        <Navbar key={expand} bg="light" expand={false} className="mb-auto p-0">
+          <Container fluid className="bg-info bg-gradient">
+            <Navbar.Brand href={HOME}>StonkNet</Navbar.Brand>
+
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
 
             <Navbar.Offcanvas
@@ -84,7 +73,7 @@ export default function Navegacion({ setBuscarEmpresa }) {
                     title="Acciones"
                     id={`offcanvasNavbarDropdown-expand-${expand}`}
                   >
-                    {usuario.acciones.map((empresa) => (
+                    {usuario.acciones?.map((empresa) => (
                       <NavDropdown.Item>
                         <Link to={`/empresa/${empresa.nombre}`}>
                           {empresa.nombre} - {empresa.cantidad}
@@ -96,7 +85,7 @@ export default function Navegacion({ setBuscarEmpresa }) {
                     title="Favoritos"
                     id={`offcanvasNavbarDropdown-expand-${expand}`}
                   >
-                    {usuario.favoritos.map((empresa) => (
+                    {usuario.favoritos?.map((empresa) => (
                       <NavDropdown.Item>
                         <Link to={`/empresa/${empresa}`}>{empresa}</Link>
                       </NavDropdown.Item>
@@ -108,7 +97,32 @@ export default function Navegacion({ setBuscarEmpresa }) {
                       Log Out
                     </Button>
                   </Form>
+                  <Button variant="primary" onClick={handleShow}>
+                    Borrar usuario
+                  </Button>
                 </Nav>
+                <Modal show={show} onHide={handleClose}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Borrar usuario</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    ¿Estás seguro?
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      onClick={borrarUsuario}
+                    >
+                      Si
+                    </Button>
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      onClick={handleClose}
+                    >
+                      No
+                    </Button>
+                  </Modal.Body>
+                </Modal>
               </Offcanvas.Body>
             </Navbar.Offcanvas>
           </Container>

@@ -4,18 +4,17 @@ import { useState } from "react";
 import { LOGIN, USUARIO } from "../../config/settings";
 import { Form, Button, Modal, Container, Col, Row } from "react-bootstrap/";
 import { useLogeadoContext } from "../../Contexts/LogeadoContext";
-export default function Login() {
-const {setInfo} = useLogeadoContext()
 
+export default function Login() {
+  const { setInfo } = useLogeadoContext();
   const navigate = useNavigate();
 
-
- 
-  //      Manejador de modal
+  //      Manejo del modal
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  //      Manejo del Login
   const [usuario, setUsuario] = useState({
     nombre: "",
     contraseña: "",
@@ -49,6 +48,7 @@ const {setInfo} = useLogeadoContext()
     }
   }
 
+  //      Manejo  del Registro
   const [nuevoUsuario, setNuevoUsuario] = useState({
     nombre: "",
     contraseña: "",
@@ -59,7 +59,7 @@ const {setInfo} = useLogeadoContext()
     acciones: [],
     rol: "usuario",
   });
-  
+
   function handleInputsRegistro(event) {
     setNuevoUsuario((usuario) => ({
       ...usuario,
@@ -78,14 +78,13 @@ const {setInfo} = useLogeadoContext()
 
     await fetch(USUARIO, requestUsuario);
     localStorage.setItem("usuario", JSON.stringify(nuevoUsuario));
+    setInfo(nuevoUsuario);
     navigate(HOME);
   }
   return (
-    <Container className="p-4" style={{height:"100vh"}}>
-      <div >
-        <Row>
-          <h1 className="text-center">Login</h1>
-        </Row>
+    <div className="login">
+    <Container fluid className="p-4 d-flex justify-content-center" style={{ height: "100vh", weight: "100vh"}} >
+      <div className="bg-light d-flex justify-content-center align-self-center h-50 w-50">
         <Row className="justify-content-center align-content-center">
           <Col md="auto">
             <Form onSubmit={handleSubmitLogin}>
@@ -121,11 +120,10 @@ const {setInfo} = useLogeadoContext()
                 Entrar
               </Button>
             </Form>
-              <Button variant="primary" onClick={handleShow}>
+            <Button variant="primary" onClick={handleShow}>
               Regístrate
             </Button>
           </Col>
-            
         </Row>
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -211,5 +209,6 @@ const {setInfo} = useLogeadoContext()
         </Modal>
       </div>
     </Container>
+    </div>
   );
 }

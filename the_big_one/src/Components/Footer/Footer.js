@@ -2,7 +2,7 @@ import { Container, Col, Row, ListGroup } from "react-bootstrap/";
 
 export default function Footer() {
   return (
-    <Container fluid class="mt-5">
+    <Container fluid className="mt-5 bg-secondary">
       <Row>
         <Col>
           <ListGroup variant="flush">

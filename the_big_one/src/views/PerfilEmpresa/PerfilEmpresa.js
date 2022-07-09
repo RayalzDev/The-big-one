@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
-import { UNAEMPRESA } from "../../config/settings";
-import { Accordion } from "react-bootstrap/";
+import { UNAEMPRESA, EDITUSUARIO } from "../../config/settings";
+import { Container, Row, Col, Button, Form } from "react-bootstrap/";
 import useFetch from "../../hooks/useFetch";
+import { useState } from "react";
+import { useLogeadoContext } from "../../Contexts/LogeadoContext";
 
 import {
   Chart as ChartJS,
@@ -26,7 +28,7 @@ ChartJS.register(
 
 export default function PerfilEmpresa() {
   // Fetch a la empresa
-  
+
   const params = useParams();
   const { name } = params;
   const empresa = useFetch(UNAEMPRESA.replace("<NAME>", name));
@@ -41,7 +43,7 @@ export default function PerfilEmpresa() {
       },
       title: {
         display: true,
-        text: empresa?.name ?? '',
+        text: empresa?.name ?? "",
       },
     },
   };
@@ -58,11 +60,11 @@ export default function PerfilEmpresa() {
     "Julio",
     "Agosto",
     "Septiembre",
-    "Octubre", 
+    "Octubre",
     "Noviembre",
-    "Diciembre"
+    "Diciembre",
   ];
-  
+
   // Datos de la gráfica
 
   const data = {
@@ -70,59 +72,131 @@ export default function PerfilEmpresa() {
     datasets: [
       {
         label: "Evolucion de bolsa",
-        data: labels.map(() => Math.floor(Math.random() * (200 - 100) + 100 )),
+        data: labels.map(() => Math.floor(Math.random() * (200 - 100) + 100)),
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
     ],
   };
 
-  // Compra de acciones
+  // Compra/venta de acciones
 
-// function comprar (cantidad, precio){
+  const [cantidad, setCantidad] = useState();
 
-//   const total = cantidad * precio
+  function handleInputs(event) {
+    setCantidad((cantidad) => ({
+      [event.target.name]: event.target.value,
+    }));
+    console.log(cantidad);
+  }
+  // function comprar (cantidad, precio){
 
-//   if (usuario.cartera >= total ){
-//     usuario.cartera - total;
-//     const requestUsuario = {
-//       method: "PUT",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(usuario.cartera, usuario),
-//     };
-//     await fetch(EDITUSUARIO.replace("<ID>", _id), requestUsuario);
-//      localStorage.setItem("usuario", JSON.stringify(usuario ));
-//      setEditando(false);
-//   }
-//   }
-// }
+  //   const total = cantidad * precio
 
+  //   if (usuario.cartera >= total ){
+  //     usuario.cartera - total;
+  //     const requestUsuario = {
+  //       method: "PUT",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(usuario.cartera, usuario),
+  //     };
+  //     await fetch(EDITUSUARIO.replace("<ID>", _id), requestUsuario);
+  //      localStorage.setItem("usuario", JSON.stringify(usuario ));
+  //      setEditando(false);
+  //   }
+  //   }
+  // }
 
-  // Venta de acciones 
+  //    Manejo de Favoritos
 
-// function vender (cantidad, precio)
+  const { info, setInfo } = useLogeadoContext();
 
+  const [usuario, setUsuario] = useState({
+    nombre: info?.nombre ?? "",
+    contraseña: info?.contraseña ?? "",
+    email: info?.email ?? "",
+    foto: info?.foto ?? "",
+    cartera: info?.cartera ?? 0,
+    favoritos: info?.favoritos ?? [],
+    acciones: info?.acciones ?? [],
+    rol: info?.rol ?? "",
+  });
 
+  async function Favorito() {
+    usuario.favoritos.push(empresa?.name ?? "");
+    const requestUsuario = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(usuario),
+    };
+
+    usuario._id = info._id;
+    setInfo(usuario);
+    localStorage.setItem("usuario", JSON.stringify(usuario));
+    await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
+  }
+
+  async function borrarFavorito() {
+    const index = usuario.favoritos.indexOf(empresa?.name ?? "");
+    usuario.favoritos.splice(index, 1);
+    
+
+    const requestUsuario = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(usuario),
+    };
+
+    usuario._id = info._id;
+    setInfo(usuario);
+    localStorage.setItem("usuario", JSON.stringify(usuario));
+    await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
+  }
+  // Borrar de favoritos = mismo array pero sin el nombre de la empresa
   return (
-    <div>
+    <Container className="p-4 " style={{ height: "100vh", weight: "100vh" }}>
       {empresa && (
         <>
-          <h1>{empresa.name}</h1>
-          <Line options={options} data={data} />
-          <p>{empresa.open}</p>
-          <p>{empresa.close}</p>
-          <Accordion>
-            <Accordion.Item eventKey="0">
-              <Accordion.Header>{empresa.name}</Accordion.Header>
-              <Accordion.Body>
-                Apertura: {empresa.open} Cierre: {empresa.close}
-                <br></br>
-                Mas alto: {empresa.high} Mas bajo: {empresa.low}
-              </Accordion.Body>
-            </Accordion.Item>
-          </Accordion>
+          <Row>
+            <Col>
+              <h1>{empresa.name}</h1>
+              <Line options={options} data={data} />
+            </Col>
+          </Row>
+          <Row className="justify-content-center align-content-center p-4">
+            <Col>
+              <Form>
+                <Button className="bg-info border border-info text-dark">
+                  Comprar
+                </Button>
+                <input type="number" onChange={handleInputs} name="cantidad" />
+                <p>{empresa.close}$</p>
+              </Form>
+            </Col>
+            <Col>
+              <Form>
+                <Button className="bg-info border border-info text-dark">
+                  Vender
+                </Button>
+                <input type="number" onChange={handleInputs} name="cantidad" />
+                <p>{empresa.high}$</p>
+              </Form>
+            </Col>
+          </Row>
+          <Button
+            onClick={Favorito}
+            className="bg-info border border-info text-dark justify-content-center"
+          >
+            Favoritos
+          </Button>
+          <Button
+            onClick={borrarFavorito}
+            className="bg-info border border-info text-dark justify-content-center"
+          >
+            Borrar Favorito
+          </Button>
         </>
       )}
-    </div>
+    </Container>
   );
 }

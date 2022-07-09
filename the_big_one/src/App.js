@@ -11,7 +11,7 @@ import LogeadoContextProvider from "./Contexts/LogeadoContext";
 function App() {
   return (
     <LogeadoContextProvider>
-      <BrowserRouter>
+      <BrowserRouter className="bg-secondary">
         <Routes>
           <Route index element={<Login />} />
           <Route path={LAYOUT} element={<Layout />}>
