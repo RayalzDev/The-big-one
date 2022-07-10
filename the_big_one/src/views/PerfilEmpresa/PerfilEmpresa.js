@@ -81,31 +81,8 @@ export default function PerfilEmpresa() {
 
   // Compra/venta de acciones
 
-  const [cantidad, setCantidad] = useState();
 
-  function handleInputs(event) {
-    setCantidad((cantidad) => ({
-      [event.target.name]: event.target.value,
-    }));
-    console.log(cantidad);
-  }
-  // function comprar (cantidad, precio){
-
-  //   const total = cantidad * precio
-
-  //   if (usuario.cartera >= total ){
-  //     usuario.cartera - total;
-  //     const requestUsuario = {
-  //       method: "PUT",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(usuario.cartera, usuario),
-  //     };
-  //     await fetch(EDITUSUARIO.replace("<ID>", _id), requestUsuario);
-  //      localStorage.setItem("usuario", JSON.stringify(usuario ));
-  //      setEditando(false);
-  //   }
-  //   }
-  // }
+ 
 
   //    Manejo de Favoritos
 
@@ -152,7 +129,7 @@ export default function PerfilEmpresa() {
     localStorage.setItem("usuario", JSON.stringify(usuario));
     await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
   }
-  // Borrar de favoritos = mismo array pero sin el nombre de la empresa
+
   return (
     <Container className="p-4 " style={{ height: "100vh", weight: "100vh" }}>
       {empresa && (
@@ -169,7 +146,7 @@ export default function PerfilEmpresa() {
                 <Button className="bg-info border border-info text-dark">
                   Comprar
                 </Button>
-                <input type="number" onChange={handleInputs} name="cantidad" />
+                <input type="number"  name="cantidad" />
                 <p>{empresa.close}$</p>
               </Form>
             </Col>
@@ -178,20 +155,21 @@ export default function PerfilEmpresa() {
                 <Button className="bg-info border border-info text-dark">
                   Vender
                 </Button>
-                <input type="number" onChange={handleInputs} name="cantidad" />
+                <input type="number"  name="cantidad" />
                 <p>{empresa.high}$</p>
               </Form>
             </Col>
           </Row>
           <Button
             onClick={Favorito}
-            className="bg-info border border-info text-dark justify-content-center"
+            className="bg-info border border-info text-dark justify-content-center "
           >
             Favoritos
           </Button>
+          {' '}
           <Button
             onClick={borrarFavorito}
-            className="bg-info border border-info text-dark justify-content-center"
+            className="bg-info border border-info text-dark justify-content-center ml-3"
           >
             Borrar Favorito
           </Button>

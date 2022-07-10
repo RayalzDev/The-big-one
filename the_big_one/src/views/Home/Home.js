@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
-import { useState, navigate } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { EDITUSUARIO } from "../../config/settings";
+import elonMuskImage from "../../assets/images/elon.jpg";
+import cacaImage from "../../assets/images/caca.jpg";
 import {
   Card,
   Form,
@@ -10,10 +12,10 @@ import {
   Row,
   Col,
   ListGroup,
-  Modal
+  Modal,
+  Carousel,
 } from "react-bootstrap/";
 import { useLogeadoContext } from "../../Contexts/LogeadoContext";
-import { EMPRESA } from "../../Routes/paths";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -39,14 +41,15 @@ export default function Home() {
   const { info, setInfo } = useLogeadoContext();
   //      Manejo de Busqueda
 
-  const [busqueda, setBusqueda] = useState({ name: "" });
+  const navigate = useNavigate();
+  const [busqueda, setBusqueda] = useState("");
 
   function handleInputsBusqueda(event) {
-    setBusqueda((empresa) => ({
-      ...empresa,
-      [event.target.name]: event.target.value,
-    }));
-    console.log(busqueda);
+    setBusqueda(event.target.value);
+  }
+
+  function handleEmpresaBuscada() {
+    navigate(`/empresa/${busqueda}`);
   }
 
   //    Manejo de Gráficas
@@ -79,11 +82,9 @@ export default function Home() {
 
   //    Manejo de Fondos
 
-
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
 
   const [usuario, setUsuario] = useState({
     nombre: info?.nombre ?? "",
@@ -101,7 +102,7 @@ export default function Home() {
       ...usuario,
       [event.target.name]: event.target.value,
     }));
-    console.log(usuario.cartera)
+    console.log(usuario.cartera);
   }
 
   async function submitCartera() {
@@ -121,12 +122,12 @@ export default function Home() {
     <Container
       fluid
       style={{ height: "100vh", weight: "100vh" }}
-      className="p-2 bg-secondary bg-gradient"
+      className="p-2"
     >
       <h1>Home</h1>
       <Row className="justify-content-center ">
         <Col md="auto">
-          <Form>
+          <Form onSubmit={handleEmpresaBuscada}>
             <Form.Group className="mb-3" controlId="formBasicText">
               <FormControl
                 type="search"
@@ -185,15 +186,17 @@ export default function Home() {
             })}
         </Col>
         <Col className="p-4 justify-content-end">
-          <Card style={{ width: "25rem" }}>
+          <Card style={{ width: "25rem" }} className="mb-5">
             <Card.Body>
               <Card.Title>Fondos disponibles</Card.Title>
               <Card.Subtitle className="mb-2 text-muted">
                 {info.nombre}
               </Card.Subtitle>
               <Card.Text>
-              <h1 className="text-end">{info.cartera}$</h1>
-                <Button className="bg-success" onClick={handleShow}>Añadir Fondos</Button>
+                <h1 className="text-end">{info.cartera}$</h1>
+                <Button className="bg-success" onClick={handleShow}>
+                  Añadir Fondos
+                </Button>
                 <Modal show={show} onHide={handleClose}>
                   <Modal.Header closeButton>
                     <Modal.Title>Añadir fondos</Modal.Title>
@@ -205,22 +208,61 @@ export default function Home() {
                         name="cartera"
                         value={usuario.cartera}
                         onChange={handleCartera}
-                      /> 
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      >
-                      Añadir
-                    </Button>
-                      </Form>
+                      />
+                      <Button variant="primary" type="submit">
+                        Añadir
+                      </Button>
+                    </Form>
                   </Modal.Body>
                 </Modal>
               </Card.Text>
             </Card.Body>
           </Card>
+          <Col className="p-2 justify-content-center bg-light mt-4 mb-4">
+            <Carousel>
+              <Carousel.Item>
+                <img
+                  className="d-block w-100 h-100"
+                  src={elonMuskImage}
+                  alt="First slide"
+                />
+                <Carousel.Caption>
+                  <h3>
+                    Elon Musk rescinde acuerdo de 44.000 millones de dólares con
+                    Twitter
+                  </h3>
+                  <p>
+                    El presidente ejecutivo de Tesla inc, Elon Musk, dijo el
+                    viernes que rescindió su oferta de 44.000 millones de
+                    dólares por Twitter Inc., bajo el argumento de que la
+                    empresa de redes sociales no había proporcionado información
+                    sobre cuentas falsas en la plataforma.
+                  </p>
+                </Carousel.Caption>
+              </Carousel.Item>
+              <Carousel.Item>
+                <img
+                  className="d-block w-100 h-100"
+                  src={cacaImage}
+                  alt="Third slide"
+                />
+
+                <Carousel.Caption>
+                  <h3>¿Por qué congelar tu caca podría salvarte la vida?</h3>
+                  <p>
+                    Esto es precisamente lo que propone un grupo de
+                    investigadores de la Facultad de Medicina de Harvard y del
+                    Hospital Brigham and Women’s: que la gente congele una
+                    muestra de caca para almacenarla en un banco de heces y
+                    poder recurrir a ella en un momento de necesidad.
+                  </p>
+                </Carousel.Caption>
+              </Carousel.Item>
+            </Carousel>
+          </Col>
         </Col>
-        <Col className="p-4 justify-content-end">
-          <Card style={{ width: "18rem" }} className="border-0 p-1 bg-warning ">
+        <Col className="p-3 justify-content-end">
+          <Card style={{ width: "18rem" }} className="border-0 p-1 bg-light ">
             <Card.Header className="bg-primary">
               <h3>Favoritos</h3>
             </Card.Header>

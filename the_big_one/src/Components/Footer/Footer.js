@@ -2,11 +2,11 @@ import { Container, Col, Row, ListGroup } from "react-bootstrap/";
 
 export default function Footer() {
   return (
-    <Container fluid className="mt-5 bg-secondary">
+    <Container fluid className="mt-5 bg-light">
       <Row>
         <Col>
           <ListGroup variant="flush">
-            <ListGroup.Item variant="success">Contacto</ListGroup.Item>
+            <h3 className="justify-content-end">Contacto</h3>
             <ListGroup.Item action href="https://github.com/RayalzDev">
               github.com/RayalzDev
             </ListGroup.Item>
