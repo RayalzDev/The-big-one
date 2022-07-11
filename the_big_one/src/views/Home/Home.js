@@ -119,12 +119,7 @@ export default function Home() {
   }
 
   return (
-    <Container
-      fluid
-      style={{ height: "100vh", weight: "100vh" }}
-      className="p-2"
-    >
-      <h1>Home</h1>
+    <Container fluid className="p-2">
       <Row className="justify-content-center ">
         <Col md="auto">
           <Form onSubmit={handleEmpresaBuscada}>
@@ -149,7 +144,7 @@ export default function Home() {
         </Col>
       </Row>
       <Row>
-        <Col className="d-flex flex-wrap">
+        <Col className="d-flex flex-wrap shadow-lg  acciones" style={{maxHeight: "100vh", overflowY: "scroll"}}>
           {info &&
             info.acciones?.map((empresa) => {
               const data = {
@@ -227,16 +222,14 @@ export default function Home() {
                   alt="First slide"
                 />
                 <Carousel.Caption>
-                  <h3>
+                  <h4>
                     Elon Musk rescinde acuerdo de 44.000 millones de dólares con
                     Twitter
-                  </h3>
+                  </h4>
                   <p>
-                    El presidente ejecutivo de Tesla inc, Elon Musk, dijo el
-                    viernes que rescindió su oferta de 44.000 millones de
-                    dólares por Twitter Inc., bajo el argumento de que la
-                    empresa de redes sociales no había proporcionado información
-                    sobre cuentas falsas en la plataforma.
+                    Bajo el argumento de que la empresa de redes sociales no
+                    había proporcionado información sobre cuentas falsas en la
+                    plataforma.
                   </p>
                 </Carousel.Caption>
               </Carousel.Item>
@@ -248,13 +241,11 @@ export default function Home() {
                 />
 
                 <Carousel.Caption>
-                  <h3>¿Por qué congelar tu caca podría salvarte la vida?</h3>
+                  <h4>¿Por qué congelar tu caca podría salvarte la vida?</h4>
                   <p>
-                    Esto es precisamente lo que propone un grupo de
-                    investigadores de la Facultad de Medicina de Harvard y del
-                    Hospital Brigham and Women’s: que la gente congele una
-                    muestra de caca para almacenarla en un banco de heces y
-                    poder recurrir a ella en un momento de necesidad.
+                    Que la gente congele una muestra de caca para almacenarla en
+                    un banco de heces y poder recurrir a ella en un momento de
+                    necesidad.
                   </p>
                 </Carousel.Caption>
               </Carousel.Item>

@@ -27,6 +27,7 @@ ChartJS.register(
 );
 
 export default function PerfilEmpresa() {
+  const { info, setInfo } = useLogeadoContext();
   // Fetch a la empresa
 
   const params = useParams();
@@ -79,14 +80,7 @@ export default function PerfilEmpresa() {
     ],
   };
 
-  // Compra/venta de acciones
-
-
- 
-
   //    Manejo de Favoritos
-
-  const { info, setInfo } = useLogeadoContext();
 
   const [usuario, setUsuario] = useState({
     nombre: info?.nombre ?? "",
@@ -101,10 +95,12 @@ export default function PerfilEmpresa() {
 
   async function Favorito() {
     usuario.favoritos.push(empresa?.name ?? "");
+    const { _id, ...rest } = usuario;
+
     const requestUsuario = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(usuario),
+      body: JSON.stringify(rest),
     };
 
     usuario._id = info._id;
@@ -116,12 +112,13 @@ export default function PerfilEmpresa() {
   async function borrarFavorito() {
     const index = usuario.favoritos.indexOf(empresa?.name ?? "");
     usuario.favoritos.splice(index, 1);
-    
+
+    const { _id, ...rest } = usuario;
 
     const requestUsuario = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(usuario),
+      body: JSON.stringify(rest),
     };
 
     usuario._id = info._id;
@@ -130,6 +127,71 @@ export default function PerfilEmpresa() {
     await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
   }
 
+  // Compra/venta de acciones
+
+  const [cantidad, setCantidad] = useState("");
+
+  function handlecantidad(e) {
+    setCantidad(e.target.value);
+  }
+
+  const compra = { nombre: empresa?.name ?? "", cantidad: cantidad };
+
+  // Vender acciones
+  async function vender(e) {
+    e.preventDefault();
+    const { _id, ...rest } = usuario;
+    if(usuario.acciones.find(empresa => empresa.nombre) === empresa.name && usuario.acciones.find(empresa => empresa.cantidad) >= cantidad ){
+      const fondoActual = usuario.cartera + empresa.high * cantidad;
+
+      
+      
+      setUsuario((usuario) => ({
+        ...usuario,
+        cartera: fondoActual,
+        acciones: [...usuario.acciones, { nombre: empresa.name, cantidad }],
+      }));
+      
+      const requestUsuario = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(rest),
+      };
+      
+      usuario._id = info._id;
+      setInfo(usuario);
+      localStorage.setItem("usuario", JSON.stringify(usuario));
+      await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
+    } else { 
+      alert("No tienes activos para vender!!")
+    }
+    }
+    //  Comprar acciones
+
+  async function comprar(e) {
+    const { _id, ...rest } = usuario;
+    e.preventDefault();
+    if (usuario.cartera >= empresa.high * compra.cantidad) {
+      const fondoActual = usuario.cartera - empresa.high * cantidad;
+      if (usuario.acciones.find(empresa.name))
+        setUsuario((usuario) => ({
+          ...usuario,
+          cartera: fondoActual,
+          acciones: [...usuario.acciones, { nombre: empresa.name, cantidad }],
+        }));
+
+      const requestUsuario = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(rest),
+      };
+
+      usuario._id = info._id;
+      setInfo(usuario);
+      localStorage.setItem("usuario", JSON.stringify(usuario));
+      await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
+    }
+  }
   return (
     <Container className="p-4 " style={{ height: "100vh", weight: "100vh" }}>
       {empresa && (
@@ -142,37 +204,54 @@ export default function PerfilEmpresa() {
           </Row>
           <Row className="justify-content-center align-content-center p-4">
             <Col>
-              <Form>
-                <Button className="bg-info border border-info text-dark">
+              <Form onSubmit={comprar}>
+                <Button
+                  className="bg-info border border-info text-dark"
+                  type="submit"
+                >
                   Comprar
                 </Button>
-                <input type="number"  name="cantidad" />
-                <p>{empresa.close}$</p>
+                <input
+                  type="number"
+                  name="cantidad"
+                  value={compra.cantidad}
+                  onChange={handlecantidad}
+                />
+                <p>{empresa.high}$</p>
               </Form>
             </Col>
             <Col>
-              <Form>
-                <Button className="bg-info border border-info text-dark">
+              <Form onSubmit={vender}>
+                <Button
+                  className="bg-info border border-info text-dark"
+                  type="submit"
+                >
                   Vender
                 </Button>
-                <input type="number"  name="cantidad" />
+                <input
+                  type="number"
+                  name="cantidad"
+                  onChange={handlecantidad}
+                />
                 <p>{empresa.high}$</p>
               </Form>
             </Col>
           </Row>
-          <Button
-            onClick={Favorito}
-            className="bg-info border border-info text-dark justify-content-center "
-          >
-            Favoritos
-          </Button>
-          {' '}
-          <Button
-            onClick={borrarFavorito}
-            className="bg-info border border-info text-dark justify-content-center ml-3"
-          >
-            Borrar Favorito
-          </Button>
+          {usuario.favoritos.includes(empresa.name) ? (
+            <Button
+              onClick={borrarFavorito}
+              className="bg-info border border-info text-dark justify-content-center ml-3"
+            >
+              Borrar Favorito
+            </Button>
+          ) : (
+            <Button
+              onClick={Favorito}
+              className="bg-info border border-info text-dark justify-content-center "
+            >
+              Favoritos
+            </Button>
+          )}
         </>
       )}
     </Container>

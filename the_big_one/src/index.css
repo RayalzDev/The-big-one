@@ -15,6 +15,15 @@ body {
   -o-background-size: cover;
 }
 
+
+.acciones { 
+  background-color: #d4d8db;
+  min-height: 100vh;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: rgb(38, 177, 94);
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

@@ -7,10 +7,10 @@ import Footer from "../Footer";
 export default function Layout() {
  
   return (
-    <Container fluid className="p-0 bg-light ">
+    <Container fluid className="p-0 ">
       <Navbar/>
       <Outlet />
-      <Footer />
+  
     </Container>
   );
 }

@@ -20,6 +20,24 @@ MongoClient.connect("mongodb://localhost:27017/", (err, client) => {
 
 //------CRUD del usuario--------//
 
+//Compra acciones usuario
+
+app.put("/usuario/compra", async function (request, response) {
+  let database = db.db("big_one_server");
+  await database
+    .collection("usuarios")
+    .findOne(
+      { _id: { $eq: ObjectId(request.body.id) } },
+      async function (err, results) {
+        if (!results) {
+          response.status(404).send("usuario no encontrado");
+        }
+
+        response.status(200).send(results);
+      }
+    );
+});
+
 //Obetener todos los usuarios
 
 app.get("/usuario", async function (request, response) {
@@ -39,14 +57,18 @@ app.get("/usuario", async function (request, response) {
 
 app.get("/usuarios/:id", async function (request, response) {
   let database = db.db("big_one_server");
-  await database.collection("usuarios").findOne({ _id: { $eq: ObjectId(request.params.id) } },
-     async function (err, results) {
-      if (!results) {
-        response.status(404).send("usuario no encontrado");
-      }
+  await database
+    .collection("usuarios")
+    .findOne(
+      { _id: { $eq: ObjectId(request.params.id) } },
+      async function (err, results) {
+        if (!results) {
+          response.status(404).send("usuario no encontrado");
+        }
 
-      response.status(200).send(results);
-    });
+        response.status(200).send(results);
+      }
+    );
 });
 
 //Crear usuario
@@ -85,15 +107,15 @@ app.put("/usuario/:id", async function (request, response) {
     .updateOne(
       { _id: { $eq: ObjectId(request.params.id) } },
       { $set: request.body }
-    ), async function (err, results) {
+    ),
+    async function (err, results) {
       if (!results) {
         response.status(404).send("usuario no encontrado");
       }
 
       response.status(200).send(results);
-    }});
- 
-;
+    };
+});
 
 //Borrar usuario
 
