@@ -129,56 +129,46 @@ export default function PerfilEmpresa() {
 
   // Compra/venta de acciones
 
-  const [cantidad, setCantidad] = useState("");
+  const [cantidad, setCantidad] = useState(Number(0));
+  const datoEmpresa = info.acciones.find(
+    (x) => x.nombre === empresa?.name ?? ""
+  );
 
   function handlecantidad(e) {
     setCantidad(e.target.value);
   }
-
-  const compra = { nombre: empresa?.name ?? "", cantidad: cantidad };
+  const compra = { nombre: empresa?.name ?? "", cantidad: Number(cantidad) };
 
   // Vender acciones
   async function vender(e) {
     e.preventDefault();
     const { _id, ...rest } = usuario;
-    if(usuario.acciones.find(empresa => empresa.nombre) === empresa.name && usuario.acciones.find(empresa => empresa.cantidad) >= cantidad ){
-      const fondoActual = usuario.cartera + empresa.high * cantidad;
+    if (
+      datoEmpresa?.nombre === empresa.name &&
+      datoEmpresa?.cantidad >= cantidad
+    ) {
 
-      
-      
-      setUsuario((usuario) => ({
-        ...usuario,
-        cartera: fondoActual,
-        acciones: [...usuario.acciones, { nombre: empresa.name, cantidad }],
-      }));
-      
-      const requestUsuario = {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(rest),
-      };
-      
-      usuario._id = info._id;
-      setInfo(usuario);
-      localStorage.setItem("usuario", JSON.stringify(usuario));
-      await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
-    } else { 
-      alert("No tienes activos para vender!!")
-    }
-    }
-    //  Comprar acciones
+      const fondoActual = usuario.cartera + (empresa.high * cantidad);
 
-  async function comprar(e) {
-    const { _id, ...rest } = usuario;
-    e.preventDefault();
-    if (usuario.cartera >= empresa.high * compra.cantidad) {
-      const fondoActual = usuario.cartera - empresa.high * cantidad;
-      if (usuario.acciones.find(empresa.name))
+      datoEmpresa.cantidad = datoEmpresa.cantidad - cantidad;
+      console.log(fondoActual);
+
+      if (datoEmpresa.cantidad === 0) {
+        const index = usuario.acciones.indexOf(
+          info.acciones.find((x) => x.nombre === empresa?.name ?? "")
+        );
+        usuario.acciones.splice(index, 1);
+        setUsuario((usuario) => ({
+          ...usuario,
+          cartera: fondoActual,
+        }));
+      } else {
         setUsuario((usuario) => ({
           ...usuario,
           cartera: fondoActual,
           acciones: [...usuario.acciones, { nombre: empresa.name, cantidad }],
         }));
+      }
 
       const requestUsuario = {
         method: "PUT",
@@ -190,6 +180,39 @@ export default function PerfilEmpresa() {
       setInfo(usuario);
       localStorage.setItem("usuario", JSON.stringify(usuario));
       await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
+    } else {
+      alert("No tienes activos para vender!!");
+    }
+  }
+  //  Comprar acciones
+console.log(compra)
+
+  async function comprar(e) {
+    const { _id, ...rest } = usuario;
+    e.preventDefault();
+    if (usuario.cartera >= empresa.high * compra.cantidad && cantidad > 0) {
+
+      const fondoActual = usuario.cartera - empresa.high * cantidad;
+      console.log(fondoActual)
+
+      setUsuario((usuario) => ({
+        ...usuario,
+        cartera: fondoActual,
+        acciones: [...usuario.acciones, compra ],
+      }));
+
+      const requestUsuario = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(rest),
+      };
+
+      usuario._id = info._id;
+      setInfo(usuario);
+      localStorage.setItem("usuario", JSON.stringify(usuario));
+      await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
+    } else {
+      alert("No puedes comprar esa cantidad, prueba a cambiarla")
     }
   }
   return (
@@ -198,7 +221,15 @@ export default function PerfilEmpresa() {
         <>
           <Row>
             <Col>
-              <h1>{empresa.name}</h1>
+              <h1 className="d-flex justify-content-center">{empresa.name}</h1>
+              <div>
+                <p>
+                Activos: {datoEmpresa?.cantidad ?? 0}
+                </p>
+                <p>
+                  Fondos: {usuario.cartera}
+                </p>
+              </div>
               <Line options={options} data={data} />
             </Col>
           </Row>
@@ -214,7 +245,6 @@ export default function PerfilEmpresa() {
                 <input
                   type="number"
                   name="cantidad"
-                  value={compra.cantidad}
                   onChange={handlecantidad}
                 />
                 <p>{empresa.high}$</p>

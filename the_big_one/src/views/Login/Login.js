@@ -46,7 +46,7 @@ export default function Login() {
     }
   }
 
-  //      Manejo  del Registro
+  
   
   return (
     <div className="login">
