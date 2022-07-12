@@ -147,7 +147,7 @@ export default function PerfilEmpresa() {
   function handleVenderCantidad(e) {
     setCantidadVenta(e.target.value);
   }
-  
+  const compra = { nombre: empresa?.name ?? "", cantidad: Number(cantidad) };
 
   // Vender acciones
   async function vender(e) {
@@ -172,7 +172,13 @@ export default function PerfilEmpresa() {
           ...usuario,
           cartera: fondoActual,
         }));
-      } 
+      } else {
+        setUsuario((usuario) => ({
+          ...usuario,
+          cartera: fondoActual,
+          acciones: [...usuario.acciones, { nombre: empresa.name, cantidad }],
+        }));
+      }
 
       const requestUsuario = {
         method: "PUT",
@@ -193,25 +199,19 @@ export default function PerfilEmpresa() {
 
   async function comprar(e) {
     
-    const compra = { nombre: empresa?.name ?? "", cantidad: Number(cantidadCompra) };
-    const { _id, ...rest } = usuario;
-
     e.preventDefault();
     if (usuario.cartera >= empresa.high * cantidadCompra && cantidadCompra > 0) {
 
       const fondoActual = usuario.cartera - empresa.high * cantidadCompra;
       console.log(fondoActual)
 
-       setUsuario((usuario) => ({
+      setUsuario((usuario) => ({
         ...usuario,
         cartera: fondoActual,
-      }));
-      console.log(usuario)
-       setUsuario((usuario) => ({
-        ...rest,
-        acciones: [...usuario.acciones, compra ],
+        acciones: [...usuario.acciones, {nombre:empresa.name,cantidad: Number(cantidadCompra)} ],
       }));
 
+      const { _id, ...rest } = usuario;
 
       const requestUsuario = {
         method: "PUT",

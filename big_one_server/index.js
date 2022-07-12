@@ -102,6 +102,7 @@ app.post("/usuario", async function (request, response) {
 
 app.put("/usuario/:id", async function (request, response) {
   let database = db.db("big_one_server");
+  console.log(request.body)
   await database
     .collection("usuarios")
     .updateOne(
