@@ -3,7 +3,9 @@ import { useState } from "react";
 import { EDITUSUARIO } from "../../config/settings";
 import elonMuskImage from "../../assets/images/elon.jpg";
 import cacaImage from "../../assets/images/caca.jpg";
-import ListaFavoritos from "../../Components/ListaFavoritos"
+import euro from "../../assets/images/caca.jpg";
+import soja from "../../assets/images/caca.jpg";
+import ListaFavoritos from "../../Components/ListaFavoritos";
 import { useEmpresasContext } from "../../Contexts/EmpresasContext";
 
 import {
@@ -40,17 +42,14 @@ ChartJS.register(
   Legend
 );
 
-
-
 export default function Home() {
   const { info, setInfo } = useLogeadoContext();
-  const {listaEmpresas} = useEmpresasContext(); 
+  const { listaEmpresas } = useEmpresasContext();
 
-  const listaFavoritos = listaEmpresas.filter((item) => info.favoritos.includes(item.name))
-  console.log(listaFavoritos)
-
-
-
+  const listaFavoritos = listaEmpresas.filter((item) =>
+    info.favoritos.includes(item.name)
+  );
+  console.log(listaFavoritos);
 
   //      Manejo de Busqueda
 
@@ -134,10 +133,7 @@ export default function Home() {
   return (
     <Container fluid>
       <Row>
-        <Col
-          className="shadow-lg  acciones col-3 pt-3"
-          
-        >
+        <Col className="shadow-lg  acciones col-3 pt-3">
           <div className="pb-2 text-center">
             <h3>Mis Activos</h3>
           </div>
@@ -247,7 +243,7 @@ export default function Home() {
                   <img
                     style={{ maxHeight: "181px" }}
                     className="d-block w-100 h-100 rounded"
-                    src={cacaImage}
+                    src={euro}
                     alt="Third slide"
                   />
 
@@ -260,24 +256,66 @@ export default function Home() {
                     </p> */}
                   </Carousel.Caption>
                 </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    style={{ maxHeight: "181px" }}
+                    className="d-block w-100 h-100 rounded"
+                    src={cacaImage}
+                    alt="Third slide"
+                  />
+
+                  <Carousel.Caption>
+                    <h5>
+                      El euro toca la paridad con el dólar; su destino está
+                      ahora en los mercados de energía
+                    </h5>
+                    {/* <p>
+                      Que la gente congele una muestra de caca para almacenarla
+                      en un banco de heces y poder recurrir a ella en un momento
+                      de necesidad.
+                    </p> */}
+                  </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    style={{ maxHeight: "181px" }}
+                    className="d-block w-100 h-100 rounded"
+                    src={soja}
+                    alt="Third slide"
+                  />
+
+                  <Carousel.Caption>
+                    <h5>
+                      Ventas soja de Brasil 2022 se retrasan por estancamiento
+                      del mercado interno, débil demanda china
+                    </h5>
+                    {/* <p>
+                      Que la gente congele una muestra de caca para almacenarla
+                      en un banco de heces y poder recurrir a ella en un momento
+                      de necesidad.
+                    </p> */}
+                  </Carousel.Caption>
+                </Carousel.Item>
               </Carousel>
             </Col>
             <Col className="col-4">
               <Card className="mb-5 shadow border border-white">
                 <Card.Body>
-                  <Card.Title className="text-end "><h2>MarketPlace</h2></Card.Title>
-                  <Card.Subtitle className="text-end mb-3 mt-3">Consulta todas nuestras empresas disponibles</Card.Subtitle>
+                  <Card.Title className="text-end ">
+                    <h2>MarketPlace</h2>
+                  </Card.Title>
+                  <Card.Subtitle className="text-end mb-3 mt-3">
+                    Consulta todas nuestras empresas disponibles
+                  </Card.Subtitle>
                   <Card.Text className="text-end">
-                    <Button className="bg-primary " >
-                     Ir a Marketplace
-                    </Button>
+                    <Button className="bg-primary ">Ir a Marketplace</Button>
                   </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
           <Row className="row row-cols-3 justify-content-center">
-            <ListaFavoritos lista={listaFavoritos}/>
+            <ListaFavoritos lista={listaFavoritos} />
           </Row>
         </Col>
 
