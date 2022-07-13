@@ -137,14 +137,20 @@ export default function PerfilEmpresa() {
     (x) => x.nombre === empresa?.name ?? ""
   );
 
-  useEffect(()=> {
-    setCurrentUser(user => ({...user, acciones: [...user.acciones,{
-      cantidad: datoEmpresa ? datoEmpresa.cantidad + Number(cantidadCompra) : Number(cantidadCompra),
-      nombre: datoEmpresa?.nombre ?? empresa?.name,
-    }],
-    cartera: user.cartera - ( empresa?.high * Number(cantidadCompra))}))
+
+
+    setCurrentUser(user =>{ 
+      const currentAcciones = user.acciones.map(obj => {
+        if(obj.name === empresa.name){
+          return {...obj,cantidad: obj.cantidad + cantidadCompra}
+        }
+        return obj;
+      })
+
+      return
+      ({...user, acciones: currentAcciones,
+    cartera: user.cartera - ( empresa?.high * Number(cantidadCompra))})})
     setUsuarioActualizado(currentUser);
-  },[cantidadCompra])
 
 
   function handleComprarCantidad(e) {
@@ -205,21 +211,14 @@ export default function PerfilEmpresa() {
 
   async function comprar(e) {
     e.preventDefault();
-    if (
-      usuario.cartera >= empresa.high * cantidadCompra &&
-      cantidadCompra > 0
-    ) {
-      const fondoActual = usuario.cartera - empresa.high * cantidadCompra;
-      console.log(fondoActual);
+    const currentAcciones = info.acciones.map(obj => {
+      if(obj.name === empresa.name){
+        return {...obj,cantidad: obj.cantidad + cantidadCompra}
+      }
+      return obj;
+    })
 
-      setUsuario((usuario) => ({
-        ...usuario,
-        cartera: fondoActual,
-        acciones: [
-          ...usuario.acciones,
-          { nombre: empresa.name, cantidad: Number(cantidadCompra) },
-        ],
-      }));
+    const currentCartera = info.cartera - (empresa.high * cantidadCompra)
 
       const { _id, ...rest } = usuario;
 
@@ -237,13 +236,8 @@ export default function PerfilEmpresa() {
         requestUsuario
       );
       const data = await response.json();
-      console.log(data, +"aaaaaaaaaaaaaaaaa");
-      console.log("entra en la funcion");
-      setInfo(data);
-      setCantidadCompra("");
-    } else {
-      alert("No puedes comprar esa cantidad, prueba a cambiarla");
-    }
+      
+    
   }
   return (
     <Container className="p-4 " style={{ height: "100vh", weight: "100vh" }}>

@@ -21,7 +21,7 @@ body {
   min-height: 100vh;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: rgb(38, 177, 94);
+  color: #000000
 }
 
 code {
@@ -29,6 +29,9 @@ code {
     monospace;
 }
 
+.navegacion {
+  background-color: #253F93;
+}
 
 
 ::-webkit-scrollbar{

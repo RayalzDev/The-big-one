@@ -82,8 +82,8 @@ export default function PerfilEmpresa() {
     ],
   };
 
-  //    Manejo de Favoritos
-
+    // Seteo del usuario auxiliar
+  
   const [usuario, setUsuario] = useState({
     nombre: info?.nombre ?? "",
     contraseña: info?.contraseña ?? "",
@@ -94,6 +94,8 @@ export default function PerfilEmpresa() {
     acciones: info?.acciones ?? [],
     rol: info?.rol ?? "",
   });
+  
+  //    Manejo de Favoritos
 
   async function Favorito() {
     usuario.favoritos.push(empresa?.name ?? "");
@@ -134,7 +136,9 @@ export default function PerfilEmpresa() {
   const [cantidad, setCantidad] = useState(Number(0));
   const [cantidadCompra, setCantidadCompra] = useState(Number(0));
   const [cantidadVenta, setCantidadVenta] = useState(Number(0));
-  const indexAux = usuario.acciones.findIndex((item) => item.nombre === empresa?.name);
+  const indexAux = usuario.acciones.findIndex(
+    (item) => item.nombre === empresa?.name
+  );
 
   const datoEmpresa = info.acciones.find(
     (x) => x.nombre === empresa?.name ?? ""
@@ -148,37 +152,47 @@ export default function PerfilEmpresa() {
   }
 
   function handleVenderCantidad(e) {
-    setCantidadVenta(e.target.value);
+    setCantidadVenta(Number(e.target.value));
   }
 
   // Vender acciones
   async function vender(e) {
     e.preventDefault();
-    const { _id, ...rest } = usuario;
 
-    if (
-      datoEmpresa?.nombre === empresa.name &&
-      datoEmpresa?.cantidad >= cantidadVenta
-    ) {
-      const fondoActual =
-        usuario.cartera + empresa.high * Number(cantidadVenta);
+    const venta = {
+      nombre: empresa?.name ?? "",
+      cantidad: Number(cantidadVenta),
+    };
 
-      datoEmpresa.cantidad = datoEmpresa.cantidad - cantidadVenta;
+    if (datoEmpresa?.nombre === empresa.name && datoEmpresa?.cantidad >= cantidadVenta) {
 
-      console.log(fondoActual);
+      const fondoActual = Number(usuario.cartera) + empresa.high * Number(cantidadVenta);
 
-      if (datoEmpresa.cantidad === 0) {
-        const index = usuario.acciones.indexOf(
-          info.acciones.find((x) => x.nombre === empresa?.name ?? "")
-        );
+      const index = usuario.acciones.findIndex(
+        (item) => item.nombre === empresa?.name
+      );
+
+      usuario.acciones[index].cantidad -= cantidadVenta;
+      usuario.cartera = fondoActual;
+
+      // datoEmpresa.cantidad = datoEmpresa.cantidad - cantidadVenta;
+
+      // console.log(fondoActual);
+
+      if (usuario.acciones[index].cantidad === 0) {
+        // const index = usuario.acciones.indexOf(
+        //   info.acciones.find((x) => x.nombre === empresa?.name ?? "")
+        // );
 
         usuario.acciones.splice(index, 1);
-        setUsuario((usuario) => ({
-          ...usuario,
-          cartera: fondoActual,
-        }));
+        // setUsuario((usuario) => ({
+        //   ...usuario,
+        //   cartera: fondoActual,
+        // }));
       }
 
+      const { _id, ...rest } = usuario;
+      
       const requestUsuario = {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -186,28 +200,37 @@ export default function PerfilEmpresa() {
       };
 
       usuario._id = info._id;
-      setInfo(usuario);
+
       localStorage.setItem("usuario", JSON.stringify(usuario));
-      await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
+
+      const response = await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
+      const data = await response.json();
+
+      setInfo(data);
+      setCantidadVenta(0);
+
     } else {
+
       alert("No tienes activos para vender!!");
     }
   }
+
   //  Comprar acciones
 
   async function comprar(e) {
+    e.preventDefault();
+
     const compra = {
       nombre: empresa?.name ?? "",
       cantidad: Number(cantidadCompra),
     };
 
-    e.preventDefault();
-
     if (
       usuario.cartera >= empresa.high * cantidadCompra &&
       cantidadCompra > 0
     ) {
-      const fondoActual = usuario.cartera - empresa.high * cantidadCompra;
+
+      const fondoActual = Number(usuario.cartera) - empresa.high * cantidadCompra;
 
       usuario.cartera = fondoActual;
 
@@ -217,11 +240,8 @@ export default function PerfilEmpresa() {
         );
 
         usuario.acciones[index].cantidad += cantidadCompra;
-
       } else {
-
         usuario.acciones.push(compra);
-
       }
 
       //  setUsuario((usuario) => ({
@@ -251,17 +271,17 @@ export default function PerfilEmpresa() {
         EDITUSUARIO.replace("<ID>", info._id),
         requestUsuario
       );
-      
+
       const data = await response.json();
       console.log(data);
 
       setInfo(data);
       setCantidadCompra(0);
-
     } else {
       alert("No puedes comprar esa cantidad, prueba a cambiarla");
     }
   }
+
   return (
     <Container className="p-4 " style={{ height: "100vh", weight: "100vh" }}>
       {empresa && (
@@ -270,7 +290,7 @@ export default function PerfilEmpresa() {
             <Col>
               <h1 className="d-flex justify-content-center">{empresa.name}</h1>
               <div>
-                <p>Activos: {usuario.acciones[indexAux].cantidad ?? 0}</p> 
+                <p>Activos: {usuario.acciones[indexAux]?.cantidad ?? 0}</p>
                 <p>Fondos: {usuario.cartera} $</p>
               </div>
               <Line options={options} data={data} />

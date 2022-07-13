@@ -3,6 +3,9 @@ import { useState } from "react";
 import { EDITUSUARIO } from "../../config/settings";
 import elonMuskImage from "../../assets/images/elon.jpg";
 import cacaImage from "../../assets/images/caca.jpg";
+import ListaFavoritos from "../../Components/ListaFavoritos"
+import { useEmpresasContext } from "../../Contexts/EmpresasContext";
+
 import {
   Card,
   Form,
@@ -37,8 +40,18 @@ ChartJS.register(
   Legend
 );
 
+
+
 export default function Home() {
   const { info, setInfo } = useLogeadoContext();
+  const {listaEmpresas} = useEmpresasContext(); 
+
+  const listaFavoritos = listaEmpresas.filter((item) => info.favoritos.includes(item.name))
+  console.log(listaFavoritos)
+
+
+
+
   //      Manejo de Busqueda
 
   const navigate = useNavigate();
@@ -119,9 +132,145 @@ export default function Home() {
   }
 
   return (
-    <Container fluid className="p-2">
-      <Row className="justify-content-center ">
-        <Col md="auto">
+    <Container fluid>
+      <Row>
+        <Col
+          className="shadow-lg  acciones col-3 pt-3"
+          
+        >
+          <div className="pb-2 text-center">
+            <h3>Mis Activos</h3>
+          </div>
+          <div style={{ maxHeight: "130vh", overflowY: "scroll" }}>
+            {" "}
+            {info &&
+              info.acciones?.map((empresa) => {
+                const data = {
+                  labels,
+                  datasets: [
+                    {
+                      label: "Evolucion de bolsa",
+                      data: labels.map(() =>
+                        Math.floor(Math.random() * (200 - 100) + 100)
+                      ),
+                      borderColor: "rgb(255, 99, 132)",
+                      backgroundColor: "rgba(255, 99, 132, 0.5)",
+                    },
+                  ],
+                };
+                return (
+                  <div key={empresa.nombre} className="py-2">
+                    <Card className="border border-dark">
+                      <Card.Body>
+                        <Card.Title>
+                          <div className="d-flex justify-content-between align-items-end">
+                            <h2>{empresa.nombre}</h2>
+                            <h3>{empresa.cantidad} activos</h3>
+                          </div>
+                        </Card.Title>
+                        <Card.Text>
+                          <Line options={options} data={data} />
+                          {/* <h1 className="text-end">{empresa.cantidad} activos</h1> */}
+                        </Card.Text>
+                        <Link to={`/empresa/${empresa.nombre}`}>
+                          <Button>Ver detalles</Button>
+                        </Link>
+                      </Card.Body>
+                    </Card>
+                  </div>
+                );
+              })}
+          </div>
+        </Col>
+
+        {/* columna del medio */}
+
+        <Col className="col-6 pt-4">
+          {/* Buscador */}
+          <Row>
+            <Col className="col-6">
+              <Card className="mb-5">
+                <Card.Body>
+                  <Card.Title>Fondos disponibles</Card.Title>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    {info.nombre}
+                  </Card.Subtitle>
+                  <Card.Text>
+                    <h1 className="text-end">{info.cartera}$</h1>
+                    <Button className="bg-success" onClick={handleShow}>
+                      Añadir Fondos
+                    </Button>
+                    <Modal show={show} onHide={handleClose}>
+                      <Modal.Header closeButton>
+                        <Modal.Title>Añadir fondos</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        <Form onSubmit={submitCartera}>
+                          <Form.Control
+                            type="number"
+                            name="cartera"
+                            value={usuario.cartera}
+                            onChange={handleCartera}
+                          />
+                          <Button variant="primary" type="submit">
+                            Añadir
+                          </Button>
+                        </Form>
+                      </Modal.Body>
+                    </Modal>
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col className="col-6">
+              <Carousel className="rounded">
+                <Carousel.Item>
+                  <img
+                    style={{ maxHeight: "181px" }}
+                    className="d-block w-100 h-100 rounded"
+                    src={elonMuskImage}
+                    alt="First slide"
+                  />
+                  <Carousel.Caption>
+                    <h5>
+                      Elon Musk rescinde acuerdo de 44.000 millones de dólares
+                      con Twitter
+                    </h5>
+                    {/* <p>
+                      Bajo el argumento de que la empresa de redes sociales no
+                      había proporcionado información sobre cuentas falsas en la
+                      plataforma.
+                    </p> */}
+                  </Carousel.Caption>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    style={{ maxHeight: "181px" }}
+                    className="d-block w-100 h-100 rounded"
+                    src={cacaImage}
+                    alt="Third slide"
+                  />
+
+                  <Carousel.Caption>
+                    <h5>¿Por qué congelar tu caca podría salvarte la vida?</h5>
+                    {/* <p>
+                      Que la gente congele una muestra de caca para almacenarla
+                      en un banco de heces y poder recurrir a ella en un momento
+                      de necesidad.
+                    </p> */}
+                  </Carousel.Caption>
+                </Carousel.Item>
+              </Carousel>
+            </Col>
+          </Row>
+          <Row className="row row-cols-2 justify-content-center">
+            <ListaFavoritos lista={listaFavoritos}/>
+          </Row>
+        </Col>
+
+        {/* tercera columna */}
+
+        <Col className="col-3 pt-4">
           <Form onSubmit={handleEmpresaBuscada}>
             <Form.Group className="mb-3" controlId="formBasicText">
               <FormControl
@@ -141,119 +290,7 @@ export default function Home() {
               Buscar
             </Button>
           </Form>
-        </Col>
-      </Row>
-      <Row>
-        <Col className="d-flex flex-wrap shadow-lg  acciones" style={{maxHeight: "100vh", overflowY: "scroll"}}>
-          {info &&
-            info.acciones?.map((empresa) => {
-              const data = {
-                labels,
-                datasets: [
-                  {
-                    label: "Evolucion de bolsa",
-                    data: labels.map(() =>
-                      Math.floor(Math.random() * (200 - 100) + 100)
-                    ),
-                    borderColor: "rgb(255, 99, 132)",
-                    backgroundColor: "rgba(255, 99, 132, 0.5)",
-                  },
-                ],
-              };
-              return (
-                <div key={empresa.nombre} className="p-4">
-                  <Card style={{ width: "25rem" }}>
-                    <Card.Body>
-                      <Card.Title classname="fs-1">{empresa.nombre}</Card.Title>
-                      <Card.Subtitle className="mb-2 text-muted"></Card.Subtitle>
-                      <Card.Text>
-                        <Line options={options} data={data} />
-
-                        <h1 className="text-end">{empresa.cantidad} activos</h1>
-                      </Card.Text>
-                      <Link to={`/empresa/${empresa.nombre}`}>
-                        Ver detalles
-                      </Link>
-                    </Card.Body>
-                  </Card>
-                </div>
-              );
-            })}
-        </Col>
-        <Col className="p-4 justify-content-end">
-          <Card style={{ width: "25rem" }} className="mb-5">
-            <Card.Body>
-              <Card.Title>Fondos disponibles</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">
-                {info.nombre}
-              </Card.Subtitle>
-              <Card.Text>
-                <h1 className="text-end">{info.cartera}$</h1>
-                <Button className="bg-success" onClick={handleShow}>
-                  Añadir Fondos
-                </Button>
-                <Modal show={show} onHide={handleClose}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Añadir fondos</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <Form onSubmit={submitCartera}>
-                      <Form.Control
-                        type="number"
-                        name="cartera"
-                        value={usuario.cartera}
-                        onChange={handleCartera}
-                      />
-                      <Button variant="primary" type="submit">
-                        Añadir
-                      </Button>
-                    </Form>
-                  </Modal.Body>
-                </Modal>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-          <Col className="p-2 justify-content-center bg-light mt-4 mb-4">
-            <Carousel>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100 h-100"
-                  src={elonMuskImage}
-                  alt="First slide"
-                />
-                <Carousel.Caption>
-                  <h4>
-                    Elon Musk rescinde acuerdo de 44.000 millones de dólares con
-                    Twitter
-                  </h4>
-                  <p>
-                    Bajo el argumento de que la empresa de redes sociales no
-                    había proporcionado información sobre cuentas falsas en la
-                    plataforma.
-                  </p>
-                </Carousel.Caption>
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className="d-block w-100 h-100"
-                  src={cacaImage}
-                  alt="Third slide"
-                />
-
-                <Carousel.Caption>
-                  <h4>¿Por qué congelar tu caca podría salvarte la vida?</h4>
-                  <p>
-                    Que la gente congele una muestra de caca para almacenarla en
-                    un banco de heces y poder recurrir a ella en un momento de
-                    necesidad.
-                  </p>
-                </Carousel.Caption>
-              </Carousel.Item>
-            </Carousel>
-          </Col>
-        </Col>
-        <Col className="p-3 justify-content-end">
-          <Card style={{ width: "18rem" }} className="border-0 p-1 bg-light ">
+          <Card style={{ width: "15rem" }} className="border-0  bg-light ">
             <Card.Header className="bg-primary">
               <h3>Favoritos</h3>
             </Card.Header>
