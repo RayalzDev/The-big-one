@@ -22,12 +22,14 @@ MongoClient.connect("mongodb://localhost:27017/", (err, client) => {
 
 //Compra acciones usuario
 
+// Body: id usuario, name de la empresa, cantidad de acciones, precio acciones
+
 app.put("/usuario/compra", async function (request, response) {
   let database = db.db("big_one_server");
   await database
-    .collection("usuarios")
+    .collection("empresas")
     .findOne(
-      { _id: { $eq: ObjectId(request.body.id) } },
+      { name: { $eq: ObjectId(request.body.nombreEmpresa) } },
       async function (err, results) {
         if (!results) {
           response.status(404).send("usuario no encontrado");
@@ -102,20 +104,23 @@ app.post("/usuario", async function (request, response) {
 
 app.put("/usuario/:id", async function (request, response) {
   let database = db.db("big_one_server");
-  console.log(request.body)
-  await database
-    .collection("usuarios")
-    .updateOne(
-      { _id: { $eq: ObjectId(request.params.id) } },
-      { $set: request.body }
-    ),
+  // console.log(request.body)
+  await database.collection("usuarios").updateOne({ _id: { $eq: ObjectId(request.params.id) } },{ $set: request.body },
     async function (err, results) {
       if (!results) {
         response.status(404).send("usuario no encontrado");
+      } else { 
+        database.collection("usuarios").findOne({ _id: { $eq: ObjectId(request.params.id)}},
+          function(error, resultado){
+            if(!resultado) {
+              response.status(404).send("usuario no encontrado")
+            } else {
+              response.status(200).send(resultado)
+            }
+          }
+        )
       }
-
-      response.status(200).send(results);
-    };
+    });
 });
 
 //Borrar usuario

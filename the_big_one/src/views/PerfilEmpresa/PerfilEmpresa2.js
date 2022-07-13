@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { UNAEMPRESA, EDITUSUARIO } from "../../config/settings";
 import { Container, Row, Col, Button, Form } from "react-bootstrap/";
 import useFetch from "../../hooks/useFetch";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useLogeadoContext } from "../../Contexts/LogeadoContext";
 
 import {
@@ -30,8 +30,7 @@ export default function PerfilEmpresa() {
   const { info, setInfo } = useLogeadoContext();
   // Fetch a la empresa
 
-  const params = useParams();
-  const { name } = params;
+  const { name } = useParams();
   const empresa = useFetch(UNAEMPRESA.replace("<NAME>", name));
 
   // Opciones de la gráfica
@@ -129,25 +128,34 @@ export default function PerfilEmpresa() {
 
   // Compra/venta de acciones
 
-  const [cantidad, setCantidad] = useState(Number(0));
-  const [cantidadCompra,setCantidadCompra] = useState("")
-  const [cantidadVenta,setCantidadVenta] = useState("")
+  const [cantidadCompra, setCantidadCompra] = useState("");
+  const [cantidadVenta, setCantidadVenta] = useState("");
+  const [currentUser,setCurrentUser] = useState(info)
+  const [usuarioActualizado, setUsuarioActualizado] = useState(null);
 
   const datoEmpresa = info.acciones.find(
     (x) => x.nombre === empresa?.name ?? ""
   );
 
-  function handlecantidad(e) {
-    setCantidad(e.target.value);
-  }
+  useEffect(()=> {
+    setCurrentUser(user => ({...user, acciones: [...user.acciones,{
+      cantidad: datoEmpresa ? datoEmpresa.cantidad + Number(cantidadCompra) : Number(cantidadCompra),
+      nombre: datoEmpresa?.nombre ?? empresa?.name,
+    }],
+    cartera: user.cartera - ( empresa?.high * Number(cantidadCompra))}))
+    setUsuarioActualizado(currentUser);
+  },[cantidadCompra])
+
+
   function handleComprarCantidad(e) {
     setCantidadCompra(e.target.value);
   }
-  
+
+  console.log(usuarioActualizado)
+
   function handleVenderCantidad(e) {
     setCantidadVenta(e.target.value);
   }
-  const compra = { nombre: empresa?.name ?? "", cantidad: Number(cantidad) };
 
   // Vender acciones
   async function vender(e) {
@@ -157,8 +165,7 @@ export default function PerfilEmpresa() {
       datoEmpresa?.nombre === empresa.name &&
       datoEmpresa?.cantidad >= cantidadVenta
     ) {
-
-      const fondoActual = usuario.cartera + (empresa.high * cantidadVenta);
+      const fondoActual = usuario.cartera + empresa.high * cantidadVenta;
 
       datoEmpresa.cantidad = datoEmpresa.cantidad - cantidadVenta;
       console.log(fondoActual);
@@ -176,7 +183,7 @@ export default function PerfilEmpresa() {
         setUsuario((usuario) => ({
           ...usuario,
           cartera: fondoActual,
-          acciones: [...usuario.acciones, { nombre: empresa.name, cantidad }],
+          acciones: [...usuario.acciones, { nombre: empresa.name, cantidadVenta }],
         }));
       }
 
@@ -196,19 +203,22 @@ export default function PerfilEmpresa() {
   }
   //  Comprar acciones
 
-
   async function comprar(e) {
-    
     e.preventDefault();
-    if (usuario.cartera >= empresa.high * cantidadCompra && cantidadCompra > 0) {
-
+    if (
+      usuario.cartera >= empresa.high * cantidadCompra &&
+      cantidadCompra > 0
+    ) {
       const fondoActual = usuario.cartera - empresa.high * cantidadCompra;
-      console.log(fondoActual)
+      console.log(fondoActual);
 
       setUsuario((usuario) => ({
         ...usuario,
         cartera: fondoActual,
-        acciones: [...usuario.acciones, {nombre:empresa.name,cantidad: Number(cantidadCompra)} ],
+        acciones: [
+          ...usuario.acciones,
+          { nombre: empresa.name, cantidad: Number(cantidadCompra) },
+        ],
       }));
 
       const { _id, ...rest } = usuario;
@@ -220,16 +230,19 @@ export default function PerfilEmpresa() {
       };
 
       usuario._id = info._id;
-      
+
       localStorage.setItem("usuario", JSON.stringify(usuario));
-      const response = await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
+      const response = await fetch(
+        EDITUSUARIO.replace("<ID>", info._id),
+        requestUsuario
+      );
       const data = await response.json();
-      console.log(data, + "aaaaaaaaaaaaaaaaa")
-      console.log("entra en la funcion")
+      console.log(data, +"aaaaaaaaaaaaaaaaa");
+      console.log("entra en la funcion");
       setInfo(data);
-      setCantidadCompra("")
+      setCantidadCompra("");
     } else {
-      alert("No puedes comprar esa cantidad, prueba a cambiarla")
+      alert("No puedes comprar esa cantidad, prueba a cambiarla");
     }
   }
   return (
@@ -240,13 +253,15 @@ export default function PerfilEmpresa() {
             <Col>
               <h1 className="d-flex justify-content-center">{empresa.name}</h1>
               <div>
-                <p>
-                Activos: {datoEmpresa?.cantidad ?? 0}
-                </p>
-                <p>
-                  Fondos: {usuario.cartera}
-                </p>
+                <p>Activos: {datoEmpresa?.cantidad ?? 0}</p>
+                <p>Fondos: {usuario.cartera}</p>
               </div>
+              {usuarioActualizado && (
+                <div>
+                  <p>Activos: {usuarioActualizado.acciones[0]?.cantidad}</p>
+                  <p>Fondos: {usuarioActualizado.cartera}</p>
+                </div>
+              )}
               <Line options={options} data={data} />
             </Col>
           </Row>
@@ -261,7 +276,7 @@ export default function PerfilEmpresa() {
                 </Button>
                 <input
                   type="number"
-                  name="cantidad"
+                  name="cantidadComprar"
                   onChange={handleComprarCantidad}
                   value={cantidadCompra}
                 />
@@ -278,7 +293,7 @@ export default function PerfilEmpresa() {
                 </Button>
                 <input
                   type="number"
-                  name="cantidad"
+                  name="cantidadVender"
                   onChange={handleVenderCantidad}
                   value={cantidadVenta}
                 />

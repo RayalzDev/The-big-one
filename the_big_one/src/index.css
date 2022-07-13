@@ -31,3 +31,6 @@ code {
 
 
 
+::-webkit-scrollbar{
+  display: none;
+}
