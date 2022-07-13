@@ -36,13 +36,10 @@ export default function ListaFavoritos({ lista }) {
   };
 
   const labels = [
-    "Enero",
-    "Febrero",
-    "Abril",
-    "Junio",
-    "Agosto",
-    "Octubre",
-    "Diciembre",
+    "1er Trimestre",
+    "2º Trimestre",
+    "3er Trimestre",
+    "4º Trimestre",
   ];
   return (
     <>
@@ -62,7 +59,7 @@ export default function ListaFavoritos({ lista }) {
         };
         return (
           
-            <Card className="col-5 m-3">
+            <Card className="col-3 m-2 shadow">
               <Card.Title>
                 <b>{item.symbol}</b>
               </Card.Title>

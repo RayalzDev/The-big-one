@@ -185,11 +185,11 @@ export default function Home() {
 
         {/* columna del medio */}
 
-        <Col className="col-6 pt-4">
+        <Col className="col-9 pt-4">
           {/* Buscador */}
           <Row>
-            <Col className="col-6">
-              <Card className="mb-5">
+            <Col className="col-4">
+              <Card className="mb-5 shadow border border-white">
                 <Card.Body>
                   <Card.Title>Fondos disponibles</Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">
@@ -222,8 +222,8 @@ export default function Home() {
                 </Card.Body>
               </Card>
             </Col>
-            <Col className="col-6">
-              <Carousel className="rounded">
+            <Col className="col-4">
+              <Carousel className="rounded shadow">
                 <Carousel.Item>
                   <img
                     style={{ maxHeight: "181px" }}
@@ -262,15 +262,28 @@ export default function Home() {
                 </Carousel.Item>
               </Carousel>
             </Col>
+            <Col className="col-4">
+              <Card className="mb-5 shadow border border-white">
+                <Card.Body>
+                  <Card.Title className="text-end "><h2>MarketPlace</h2></Card.Title>
+                  <Card.Subtitle className="text-end mb-3 mt-3">Consulta todas nuestras empresas disponibles</Card.Subtitle>
+                  <Card.Text className="text-end">
+                    <Button className="bg-primary " >
+                     Ir a Marketplace
+                    </Button>
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
           </Row>
-          <Row className="row row-cols-2 justify-content-center">
+          <Row className="row row-cols-3 justify-content-center">
             <ListaFavoritos lista={listaFavoritos}/>
           </Row>
         </Col>
 
         {/* tercera columna */}
 
-        <Col className="col-3 pt-4">
+        {/* <Col className="col-3 pt-4">
           <Form onSubmit={handleEmpresaBuscada}>
             <Form.Group className="mb-3" controlId="formBasicText">
               <FormControl
@@ -308,7 +321,7 @@ export default function Home() {
                 </ListGroup>
               ))}
           </Card>
-        </Col>
+        </Col> */}
       </Row>
     </Container>
   );

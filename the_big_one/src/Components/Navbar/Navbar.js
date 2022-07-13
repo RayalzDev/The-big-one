@@ -83,7 +83,7 @@ export default function Navegacion() {
   return (
     <>
       {[false].map((expand) => (
-        <Navbar key={expand} bg="light" expand={false} className="mb-auto p-0 ">
+        <Navbar key={expand}  expand={false} className="mb-auto p-0 " style={{ width: "100%" }}>
           {/* <Container fluid className="bg-info bg-gradient p-1"> */}
           <Row className="navegacion p-1 align-items-center" style={{ width: "100%" }}>
             <Col className="col-3 text-start ps-4 d-flex align-items-center">
@@ -106,6 +106,7 @@ export default function Navegacion() {
                 <>
                   <Navbar.Toggle
                     aria-controls={`offcanvasNavbar-expand-${expand}`}
+                    variant="light"
                   />
                   <Navbar.Offcanvas
                     id={`offcanvasNavbar-expand-${expand}`}

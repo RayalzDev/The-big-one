@@ -10,7 +10,6 @@ export default function Login() {
   const navigate = useNavigate();
 
   //      Manejo del modal
-  
 
   //      Manejo del Login
   const [usuario, setUsuario] = useState({
@@ -46,53 +45,54 @@ export default function Login() {
     }
   }
 
-  
-  
   return (
     <div className="login">
-    <Container fluid className="p-4 d-flex justify-content-center" style={{ height: "100vh", weight: "100vh"}} >
-      <div className="bg-light d-flex justify-content-center align-self-center p-5 rounded">
-        <Row className="justify-content-center align-content-center">
-          <Col md="auto">
-            <Form onSubmit={handleSubmitLogin}>
-              <Form.Group className="mb-3" controlId="formBasicText">
-                <Form.Label>Usuario</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Introduce tu usuario"
-                  name="nombre"
-                  value={usuario.nombre}
-                  onChange={handleInputsLogin}
-                />
-              </Form.Group>
+      <Container
+        fluid
+        className=" d-flex justify-content-center"
+        style={{ height: "100vh", weight: "100vh" }}
+      >
+        <div className="bg-light d-flex justify-content-center align-self-center p-5 rounded">
+          <Row className="justify-content-center align-content-center">
+            <Col md="auto">
+            <h1 className="text-primary text-center ">Login</h1>
+              <Form onSubmit={handleSubmitLogin}>
+                <Form.Group className="mb-3" controlId="formBasicText">
+                  <Form.Label>Usuario</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Introduce tu usuario"
+                    name="nombre"
+                    value={usuario.nombre}
+                    onChange={handleInputsLogin}
+                  />
+                </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Introduce la contraseña"
-                  name="contraseña"
-                  value={usuario.contraseña}
-                  onChange={handleInputsLogin}
-                />
-                <Form.Text className="text-muted">
-                  Tus datos no se compartirán a menos que los podamos vender.
-                </Form.Text>
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="formBasicCheckbox"
-              ></Form.Group>
-              <Button variant="primary" type="submit">
-                Entrar
-              </Button>
-            </Form>
-
-          </Col>
-        </Row>
-        
-      </div>
-    </Container>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Introduce la contraseña"
+                    name="contraseña"
+                    value={usuario.contraseña}
+                    onChange={handleInputsLogin}
+                  />
+                  <Form.Text className="text-muted">
+                    Tus datos no se compartirán a menos que los podamos vender.
+                  </Form.Text>
+                </Form.Group>
+                <Form.Group
+                  className="mb-3"
+                  controlId="formBasicCheckbox"
+                ></Form.Group>
+                <Button variant="primary" type="submit">
+                  Entrar
+                </Button>
+              </Form>
+            </Col>
+          </Row>
+        </div>
+      </Container>
     </div>
   );
 }
