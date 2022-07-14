@@ -1,6 +1,14 @@
 import { useParams } from "react-router-dom";
 import { UNAEMPRESA, EDITUSUARIO } from "../../config/settings";
-import { Container, Row, Col, Button, Form } from "react-bootstrap/";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Form,
+  FormGroup,
+  Stack,
+} from "react-bootstrap/";
 import useFetch from "../../hooks/useFetch";
 import { useState } from "react";
 import { useLogeadoContext } from "../../Contexts/LogeadoContext";
@@ -46,7 +54,6 @@ export default function PerfilEmpresa() {
       },
       title: {
         display: true,
-        text: empresa?.name ?? "",
       },
     },
   };
@@ -82,8 +89,8 @@ export default function PerfilEmpresa() {
     ],
   };
 
-    // Seteo del usuario auxiliar
-  
+  // Seteo del usuario auxiliar
+
   const [usuario, setUsuario] = useState({
     nombre: info?.nombre ?? "",
     contraseña: info?.contraseña ?? "",
@@ -94,12 +101,16 @@ export default function PerfilEmpresa() {
     acciones: info?.acciones ?? [],
     rol: info?.rol ?? "",
   });
-  
+
   //    Manejo de Favoritos
 
-  async function Favorito() {
-    usuario.favoritos.push(empresa?.name ?? "");
-    const { _id, ...rest } = usuario;
+  async function Favorito(name) {
+    setInfo((usuario) => ({
+      ...usuario,
+      favoritos: [...usuario.favoritos, name],
+    }));
+
+    const { _id, ...rest } = info;
 
     const requestUsuario = {
       method: "PUT",
@@ -107,17 +118,18 @@ export default function PerfilEmpresa() {
       body: JSON.stringify(rest),
     };
 
-    usuario._id = info._id;
-    setInfo(usuario);
-    localStorage.setItem("usuario", JSON.stringify(usuario));
+    localStorage.setItem("usuario", JSON.stringify(info));
     await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
   }
 
-  async function borrarFavorito() {
-    const index = usuario.favoritos.indexOf(empresa?.name ?? "");
-    usuario.favoritos.splice(index, 1);
+  async function borrarFavorito(item) {
+    const currentFavoritos = info.favoritos.filter(
+      (favorito) => favorito !== item
+    );
 
-    const { _id, ...rest } = usuario;
+    setInfo((usuario) => ({ ...usuario, favoritos: currentFavoritos }));
+
+    const { _id, ...rest } = info;
 
     const requestUsuario = {
       method: "PUT",
@@ -125,9 +137,7 @@ export default function PerfilEmpresa() {
       body: JSON.stringify(rest),
     };
 
-    usuario._id = info._id;
-    setInfo(usuario);
-    localStorage.setItem("usuario", JSON.stringify(usuario));
+    localStorage.setItem("usuario", JSON.stringify(info));
     await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
   }
 
@@ -164,9 +174,12 @@ export default function PerfilEmpresa() {
       cantidad: Number(cantidadVenta),
     };
 
-    if (datoEmpresa?.nombre === empresa.name && datoEmpresa?.cantidad >= cantidadVenta) {
-
-      const fondoActual = Number(usuario.cartera) + empresa.high * Number(cantidadVenta);
+    if (
+      datoEmpresa?.nombre === empresa.name &&
+      datoEmpresa?.cantidad >= cantidadVenta
+    ) {
+      const fondoActual =
+        Number(usuario.cartera) + empresa.high * Number(cantidadVenta);
 
       const index = usuario.acciones.findIndex(
         (item) => item.nombre === empresa?.name
@@ -175,24 +188,12 @@ export default function PerfilEmpresa() {
       usuario.acciones[index].cantidad -= cantidadVenta;
       usuario.cartera = fondoActual;
 
-      // datoEmpresa.cantidad = datoEmpresa.cantidad - cantidadVenta;
-
-      // console.log(fondoActual);
-
       if (usuario.acciones[index].cantidad === 0) {
-        // const index = usuario.acciones.indexOf(
-        //   info.acciones.find((x) => x.nombre === empresa?.name ?? "")
-        // );
-
         usuario.acciones.splice(index, 1);
-        // setUsuario((usuario) => ({
-        //   ...usuario,
-        //   cartera: fondoActual,
-        // }));
       }
 
       const { _id, ...rest } = usuario;
-      
+
       const requestUsuario = {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -203,14 +204,15 @@ export default function PerfilEmpresa() {
 
       localStorage.setItem("usuario", JSON.stringify(usuario));
 
-      const response = await fetch(EDITUSUARIO.replace("<ID>", info._id), requestUsuario);
+      const response = await fetch(
+        EDITUSUARIO.replace("<ID>", info._id),
+        requestUsuario
+      );
       const data = await response.json();
 
       setInfo(data);
       setCantidadVenta(0);
-
     } else {
-
       alert("No tienes activos para vender!!");
     }
   }
@@ -229,8 +231,8 @@ export default function PerfilEmpresa() {
       usuario.cartera >= empresa.high * cantidadCompra &&
       cantidadCompra > 0
     ) {
-
-      const fondoActual = Number(usuario.cartera) - empresa.high * cantidadCompra;
+      const fondoActual =
+        Number(usuario.cartera) - empresa.high * cantidadCompra;
 
       usuario.cartera = fondoActual;
 
@@ -243,17 +245,6 @@ export default function PerfilEmpresa() {
       } else {
         usuario.acciones.push(compra);
       }
-
-      //  setUsuario((usuario) => ({
-      //   ...usuario,
-      //   cartera: fondoActual,
-      // }));
-
-      // console.log(usuario)
-      //  setUsuario((usuario) => ({
-      //   ...rest,
-      //   acciones: [...usuario.acciones, compra ],
-      // }));
 
       const { _id, ...rest } = usuario;
 
@@ -283,70 +274,57 @@ export default function PerfilEmpresa() {
   }
 
   return (
-    <Container className="p-4 " style={{ height: "100vh", weight: "100vh" }}>
+    <Container fluid>
       {empresa && (
         <>
           <Row>
-            <Col>
-              <h1 className="d-flex justify-content-center">{empresa.name}</h1>
+            <Col className="col-4 acciones p-4">
               <div>
-                <p>Activos: {usuario.acciones[indexAux]?.cantidad ?? 0}</p>
-                <p>Fondos: {usuario.cartera} $</p>
+                <h3>Activos: {usuario.acciones[indexAux]?.cantidad ?? 0}</h3>
+                <h3 className="mb-4">Fondos: {usuario.cartera} $</h3>
               </div>
-              <Line options={options} data={data} />
-            </Col>
-          </Row>
-          <Row className="justify-content-center align-content-center p-4">
-            <Col>
-              <Form onSubmit={comprar}>
-                <Button
-                  className="bg-info border border-info text-dark"
-                  type="submit"
-                >
-                  Comprar
-                </Button>
+
+              <h5 className="mb-2">Precio de Compra: {empresa.high}$</h5>
+              <Form onSubmit={comprar} className="mb-3">
                 <input
+                  className="rounded mb-1 me-2"
                   type="number"
                   name="cantidad"
                   onChange={handleComprarCantidad}
                   value={cantidadCompra}
                 />
-                <p>{empresa.high}$</p>
-              </Form>
-            </Col>
-            <Col>
-              <Form onSubmit={vender}>
+
                 <Button
-                  className="bg-info border border-info text-dark"
+                  className="bg-success border border-success text-light"
                   type="submit"
                 >
-                  Vender
+                  Comprar
                 </Button>
+              </Form>
+
+              <h5 className="mb-2">Precio de Venta: {empresa.low}$</h5>
+
+              <Form onSubmit={vender}>
                 <input
+                  className="me-2 rounded mb-1"
                   type="number"
                   name="cantidad"
                   onChange={handleVenderCantidad}
                   value={cantidadVenta}
                 />
-                <p>{empresa.high}$</p>
+                <Button
+                  className="bg-success border border-success text-light"
+                  type="submit"
+                >
+                  Vender
+                </Button>
               </Form>
             </Col>
+            <Col className="col-8 p-4">
+              <h1 className="d-flex justify-content-center">{empresa.name}</h1>
+              <Line options={options} data={data} />
+            </Col>
           </Row>
-          {usuario.favoritos.includes(empresa.name) ? (
-            <Button
-              onClick={borrarFavorito}
-              className="bg-info border border-info text-dark justify-content-center ml-3"
-            >
-              Borrar Favorito
-            </Button>
-          ) : (
-            <Button
-              onClick={Favorito}
-              className="bg-info border border-info text-dark justify-content-center "
-            >
-              Favoritos
-            </Button>
-          )}
         </>
       )}
     </Container>

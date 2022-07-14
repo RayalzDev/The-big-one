@@ -84,12 +84,8 @@ export default function Navegacion() {
     <>
       {[false].map((expand) => (
         <Navbar key={expand}  expand={false} className="mb-auto p-0 " style={{ width: "100%" }}>
-          {/* <Container fluid className="bg-info bg-gradient p-1"> */}
           <Row className="navegacion p-1 align-items-center" style={{ width: "100%" }}>
             <Col className="col-3 text-start ps-4 d-flex align-items-center">
-              {/* <h3 className="text-black pe-3">
-                <i class="bi bi-graph-up-arrow"></i>
-              </h3> */}
               <img
                     style={{ maxHeight: "59px", maxWidth: "59px" }}
                     className="d-block w-100 h-100 rounded pe-2"
@@ -112,8 +108,9 @@ export default function Navegacion() {
                     id={`offcanvasNavbar-expand-${expand}`}
                     aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
                     placement="end"
+                    
                   >
-                    <Offcanvas.Header closeButton>
+                    <Offcanvas.Header closeButton >
                       <Offcanvas.Title
                         id={`offcanvasNavbarLabel-expand-${expand}`}
                       >
@@ -121,28 +118,28 @@ export default function Navegacion() {
                       </Offcanvas.Title>
                     </Offcanvas.Header>
 
-                    <Offcanvas.Body>
+                    <Offcanvas.Body >
                       <Nav className="justify-content-end flex-grow-1 pe-3">
-                        <Nav.Link href={HOME}>Inicio</Nav.Link>
 
                         <NavDropdown
+                          className="mb-3"
                           title="Activos"
                           id={`offcanvasNavbarDropdown-expand-${expand}`}
                         >
                           {usuario.acciones?.map((empresa) => (
-                            <NavDropdown.Item>
-                              <Link to={`/empresa/${empresa.nombre}`}>
+                            <NavDropdown.Item className="text-decoration-none">
+                              <Link className="text-decoration-none" to={`/empresa/${empresa.nombre}`}>
                                 {empresa.nombre} - {empresa.cantidad}
                               </Link>
                             </NavDropdown.Item>
                           ))}
                         </NavDropdown>
 
-                        <Button variant="primary" onClick={logout}>
+                        <Button variant="primary" className="mx-2 mb-2" onClick={logout}>
                           Log Out
                         </Button>
 
-                        <Button variant="primary" onClick={handleShow}>
+                        <Button variant="danger" className="mx-2 mb-2" onClick={handleShow}>
                           Borrar usuario
                         </Button>
                       </Nav>
@@ -153,13 +150,15 @@ export default function Navegacion() {
                         <Modal.Body>
                           ¿Estás seguro?
                           <Button
-                            variant="primary"
+                          className="m-1"
+                            variant="danger"
                             type="submit"
                             onClick={borrarUsuario}
                           >
                             Si
                           </Button>
                           <Button
+                          className="m-1"
                             variant="primary"
                             type="submit"
                             onClick={handleClose}

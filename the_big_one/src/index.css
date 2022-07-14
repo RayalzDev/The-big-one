@@ -11,9 +11,12 @@ body {
   background-color: #253F93;
 }
 
+.fondoCeleste{
+  background-color: #91c2e8;
+}
 
 .acciones { 
-  background-color: #d4d8db;
+  background-color: #91c2e8;
   min-height: 100vh;
   justify-content: center;
   font-size: calc(10px + 2vmin);

@@ -3,20 +3,19 @@ import { useState } from "react";
 import { EDITUSUARIO } from "../../config/settings";
 import elonMuskImage from "../../assets/images/elon.jpg";
 import cacaImage from "../../assets/images/caca.jpg";
-import euro from "../../assets/images/caca.jpg";
-import soja from "../../assets/images/caca.jpg";
+import euroImage from "../../assets/images/euro.jpg";
+import sojaImage from "../../assets/images/soja.jpg";
 import ListaFavoritos from "../../Components/ListaFavoritos";
 import { useEmpresasContext } from "../../Contexts/EmpresasContext";
+import {MARKET} from "../../Routes/paths"
 
 import {
   Card,
   Form,
   Button,
-  FormControl,
   Container,
   Row,
   Col,
-  ListGroup,
   Modal,
   Carousel,
 } from "react-bootstrap/";
@@ -137,7 +136,7 @@ export default function Home() {
           <div className="pb-2 text-center">
             <h3>Mis Activos</h3>
           </div>
-          <div style={{ maxHeight: "130vh", overflowY: "scroll" }}>
+          <div style={{ maxHeight: "120vh", overflowY: "scroll" }}>
             {" "}
             {info &&
               info.acciones?.map((empresa) => {
@@ -243,7 +242,7 @@ export default function Home() {
                   <img
                     style={{ maxHeight: "181px" }}
                     className="d-block w-100 h-100 rounded"
-                    src={euro}
+                    src={cacaImage}
                     alt="Third slide"
                   />
 
@@ -260,7 +259,7 @@ export default function Home() {
                   <img
                     style={{ maxHeight: "181px" }}
                     className="d-block w-100 h-100 rounded"
-                    src={cacaImage}
+                    src={euroImage}
                     alt="Third slide"
                   />
 
@@ -280,12 +279,12 @@ export default function Home() {
                   <img
                     style={{ maxHeight: "181px" }}
                     className="d-block w-100 h-100 rounded"
-                    src={soja}
+                    src={sojaImage}
                     alt="Third slide"
                   />
 
                   <Carousel.Caption>
-                    <h5>
+                    <h5 className=" fw-bold">
                       Ventas soja de Brasil 2022 se retrasan por estancamiento
                       del mercado interno, débil demanda china
                     </h5>
@@ -308,7 +307,9 @@ export default function Home() {
                     Consulta todas nuestras empresas disponibles
                   </Card.Subtitle>
                   <Card.Text className="text-end">
-                    <Button className="bg-primary ">Ir a Marketplace</Button>
+                    <Link to={MARKET}>
+                      <Button className="bg-primary">Ir a Marketplace</Button>
+                    </Link>
                   </Card.Text>
                 </Card.Body>
               </Card>
